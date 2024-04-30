@@ -1,0 +1,12 @@
+<div class="container bg-gray-600">
+    <div *ngIf="userData">
+      <p><strong>Username:</strong> {{ userData.username }}</p>
+      <p><strong>Email:</strong> {{ userData.email }}</p>
+      <p><strong>First Name:</strong> {{ userData.first_name }}</p>
+      <p><strong>Last Name:</strong> {{ userData.last_name }}</p>
+    </div>
+    <div *ngIf="!userData">
+      <p>Loading...</p>
+    </div>
+  </div>
+  
