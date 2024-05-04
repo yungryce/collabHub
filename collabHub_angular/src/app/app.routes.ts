@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home.component';
 import { TaskComponent } from './task/task.component';
 
 import { authGuard } from './Auth/auth.guard';
+import { CalendarComponent } from './calendar/calendar.component';
 
 
 export const routes: Routes = [
@@ -16,6 +17,7 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent, title: 'login' },
     { path: 'profile', component: ProfileComponent, title: 'profile', canActivate: [authGuard],},
     { path: 'tasks', component: TaskComponent, title: 'tasks', canActivate: [authGuard],},
+    { path: 'calendar', component: CalendarComponent, title: 'calendar', },
     // { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: '**', redirectTo: '/404' }
 ];
