@@ -1,17 +1,17 @@
-import { Component, importProvidersFrom } from '@angular/core';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { bootstrapApplication } from '@angular/platform-browser';
+import { Component } from '@angular/core'; //importProvidersFrom
+// import { provideAnimations } from '@angular/platform-browser/animations';
+// import { bootstrapApplication } from '@angular/platform-browser';
 import 'zone.js';
 import {
   CalendarEvent,
-  CalendarEventTimesChangedEvent,
+  // CalendarEventTimesChangedEvent,
   CalendarWeekViewBeforeRenderEvent,
   CalendarDayViewBeforeRenderEvent,
   CalendarModule,
-  DateAdapter,
+  // DateAdapter,
 } from 'angular-calendar';
 import { Subject } from 'rxjs';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+// import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 
 export const colors: any = {
