@@ -27,3 +27,39 @@
         </table>
     </div>
 </div>
+
+<div *ngIf="tasks.length > 0; else noTasks">
+    <h2>Tasks</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Created By</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Users</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks">
+          <td>{{ task.title }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.status }}</td>
+          <td>{{ task.created_by }}</td>
+          <td>{{ task.start | date }}</td>
+          <td>{{ task.end | date }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let user of task.users">{{ user }}</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #noTasks>
+    <p>No tasks available</p>
+  </ng-template>
+  
