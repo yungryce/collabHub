@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
-import { TaskModel, ResponseInfo } from './task';
 import Swal from 'sweetalert2';
+
+import { TaskModel, ResponseInfo } from './task';
+import { AuthService } from './Auth/auth.service';
 
 
 @Injectable({
@@ -12,21 +14,25 @@ import Swal from 'sweetalert2';
 export class TaskService {
   private apiUrl = 'http://localhost:5000/api/v1/tasks';
 
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
-
-  constructor(private http: HttpClient) { }
-
-  // getTasks(): Observable<TaskModel[]> {
-  //   return this.http.get<ResponseInfo>(this.apiUrl);
-  // }
+  constructor(private authService: AuthService, private http: HttpClient) { }
 
   getTasks(): Observable<TaskModel[]> {
-    return this.http.get<ResponseInfo>(this.apiUrl, this.httpOptions).pipe(
+    const token = this.authService.getToken();
+    if (!token) {
+      // No token found, throw an error
+      return throwError(new Error('Authentication token not found'));
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<ResponseInfo>(this.apiUrl, { headers }).pipe(
       map((response: ResponseInfo) => {
         if (response.data && Array.isArray(response.data)) {
           // Tasks found, return the data
+          console.log(response.data);
           return response.data;
         } else {
           // No tasks found or invalid response, throw an error

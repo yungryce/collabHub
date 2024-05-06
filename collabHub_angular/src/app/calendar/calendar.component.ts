@@ -1,7 +1,7 @@
 import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core'; //importProvidersFrom
 import 'zone.js';
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
-import { CalendarEvent, CalendarEventAction, CalendarModule, CalendarView, CalendarEventTimesChangedEvent } from 'angular-calendar';
+import { CalendarMonthViewDay, CalendarEvent, CalendarEventAction, CalendarModule, CalendarView, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { Subject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -34,15 +34,15 @@ export const colors: any = {
   styleUrl: './calendar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarComponent {
-  // view: string = 'week';
-  // snapDraggedEvents = true;
-  @ViewChild('modalContent', { static: true }) modalContent!: TemplateRef<any>;
-
-  // dayStartHour = 6;
+export class CalendarComponent {  
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Month;
   CalendarView = CalendarView;
+  events: CalendarEvent[] = [];
+  activeDayIsOpen: boolean = true;
+  refresh: Subject<void> = new Subject<void>();
+
+  @ViewChild('modalContent', { static: true }) modalContent!: TemplateRef<any>;
 
   modalData!: {
     action: string;
@@ -68,33 +68,12 @@ export class CalendarComponent {
   ];
 
 
-  events: CalendarEvent[] = [];
-
   constructor(private taskService: TaskService) {
     this.fetchTasks();
   }
 
-  refresh = new Subject<void>();
-
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd,
-  }: CalendarEventTimesChangedEvent): void {
-    event.start = newStart;
-    event.end = newEnd;
-    this.refresh.next();
-  }
-
-  activeDayIsOpen: boolean = true;
-
   fetchTasks() {
-    this.taskService.getTasks().pipe(
-      catchError(error => {
-        this.handleResponseError(error);
-        return [];
-      })
-    ).subscribe(tasks => {
+    this.taskService.getTasks().subscribe(tasks => {
       // Convert tasks to calendar events
       this.events = tasks.map(task => {
         return {
@@ -104,8 +83,11 @@ export class CalendarComponent {
           actions: this.actions
         };
       });
+      // Refresh the calendar to display the events
+      this.refresh.next();
     });
   }
+
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -119,6 +101,17 @@ export class CalendarComponent {
       }
       this.viewDate = date;
     }
+  }
+  
+
+  eventTimesChanged({
+    event,
+    newStart,
+    newEnd,
+  }: CalendarEventTimesChangedEvent): void {
+    event.start = newStart;
+    event.end = newEnd;
+    this.refresh.next();
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
@@ -145,3 +138,4 @@ export class CalendarComponent {
     });
   }
 }
+
