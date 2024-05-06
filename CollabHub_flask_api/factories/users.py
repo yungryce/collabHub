@@ -15,7 +15,6 @@ def create_user(username, first_name, last_name, email, password, role):
         role=role
     )
     user.save()
-    return user
 
 @click.command()
 @with_appcontext

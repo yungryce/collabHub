@@ -7,6 +7,7 @@ from api.auth.auth import auth_views
 from database import db, init_db
 from flask_migrate import Migrate
 from factories.users import generateusers, deleteallusers
+from factories.tasks import generatetasks, deletealltasks
 
 # Load environment variables from .env file
 from dotenv import load_dotenv
@@ -29,6 +30,8 @@ app.register_blueprint(auth_views)
 
 app.cli.add_command(generateusers)
 app.cli.add_command(deleteallusers)
+app.cli.add_command(generatetasks)
+app.cli.add_command(deletealltasks)
 
 @app.errorhandler(404)
 def not_found(error):
