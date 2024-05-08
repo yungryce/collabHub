@@ -15,12 +15,12 @@ Endpoints:
 from flask import jsonify, request
 from models.tasks import TaskModel, TaskStatus
 from models.users import UserModel
-from api.v1 import app_views
+from api.v1 import task_views
 from api.response_utils import validate_json, response_info
 from api.auth.auth_utils import authenticate, authorize
 
 # Modify the route to use the authentication decorator
-@app_views.route('/', methods=['GET'], strict_slashes=False)
+@task_views.route('/', methods=['GET'], strict_slashes=False)
 @authenticate
 def get():
     # Retrieve the authenticated user from the request context
@@ -33,8 +33,7 @@ def get():
     return jsonify(response_info(200, message='Successful', data=tasks_json))
 
 
-
-@app_views.route('/<task_id>', methods=['GET'], strict_slashes=False)
+@task_views.route('/<task_id>', methods=['GET'], strict_slashes=False)
 @authenticate
 def get_task(task_id):
     """
@@ -60,7 +59,7 @@ def get_task(task_id):
 
 
 
-@app_views.route('/', methods=['POST'], strict_slashes=False)
+@task_views.route('/', methods=['POST'], strict_slashes=False)
 @authenticate
 def create_task():
     """
@@ -101,7 +100,7 @@ def create_task():
     return jsonify(response_info(201, message='Successful', data=new_task.to_json()))
 
 
-@app_views.route('/<task_id>', methods=['PUT'], strict_slashes=False)
+@task_views.route('/<task_id>', methods=['PUT'], strict_slashes=False)
 @authenticate
 def update_task(task_id):
     """
@@ -155,7 +154,7 @@ def update_task(task_id):
     return jsonify(response_info(200, message='Successful', data=task.to_json()))
 
 
-@app_views.route('/<task_id>', methods=['DELETE'], strict_slashes=False)
+@task_views.route('/<task_id>', methods=['DELETE'], strict_slashes=False)
 @authenticate
 @authorize
 def delete_task(task_id):

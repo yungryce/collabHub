@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 import os
 from flask import Flask, jsonify
-from api.v1 import app_views
+from api.v1 import task_views, user_views
 from api.auth.auth import auth_views
-# from api.auth import auth_views
 from database import db, init_db
 from flask_migrate import Migrate
 from factories.users import generateusers, deleteallusers
 from factories.tasks import generatetasks, deletealltasks
+from flask_cors import CORS
 
 # Load environment variables from .env file
 from dotenv import load_dotenv
@@ -15,6 +15,9 @@ load_dotenv()
 
 # Start the Flask app
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app)
 
 # Configure the database URI
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
@@ -25,8 +28,9 @@ init_db(app)
 migrate = Migrate(app, db)
 
 # Register the Blueprint with the Flask application
-app.register_blueprint(app_views)
+app.register_blueprint(task_views)
 app.register_blueprint(auth_views)
+app.register_blueprint(user_views)
 
 app.cli.add_command(generateusers)
 app.cli.add_command(deleteallusers)

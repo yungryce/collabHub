@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# models/base_model.py
+"""models/base_model.py"""
 
 from datetime import datetime
 from sqlalchemy import Column, DateTime, String

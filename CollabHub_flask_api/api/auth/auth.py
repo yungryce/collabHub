@@ -34,6 +34,30 @@ def get_user():
             return jsonify(response_info(404, message='User not found'))
     except Exception as e:
         return jsonify(response_info(500, message='Failed to fetch user details'))
+    
+@auth_views.route('/users/<user_id>/username', methods=['GET'])
+def get_username(user_id):
+    """
+    Get the username for the specified user ID.
+
+    Args:
+        user_id (str): The ID of the user whose username is to be fetched.
+
+    Returns:
+        JSON response with the username, or error response if user is not found.
+    """
+    try:
+        # Find the user with the specified ID
+        user = User.query.filter_by(id=user_id).first()
+
+        # Check if the user exists
+        if user:
+            # Return the username
+            return jsonify(response_info(200, data=user.username))
+        else:
+            return jsonify(response_info(404, message='User not found'))
+    except Exception as e:
+        return jsonify(response_info(500, message='Failed to fetch username'))
 
 
 @auth_views.route('/register', methods=['POST'])

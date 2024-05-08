@@ -13,10 +13,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 def authenticate(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        data = request.get_json()
-        print('------------------------------------')
-        print(data)
-        print('------------------------------------')
         if "Authorization" in request.headers:
             token = request.headers["Authorization"].split(" ")[1]
             if BlacklistToken.check_blacklist(token):

@@ -6,6 +6,7 @@ from sqlalchemy import Column, String, Table, ForeignKey, DateTime
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from database import db
 
 
 class TaskStatus(Enum):
@@ -81,6 +82,8 @@ class TaskModel(BaseModel):
         user_ids = [user.id for user in self.users]
         return {
             'id': self.id,
+            'created_by': self.created_by,
+            'user_ids': user_ids,
             'title': self.title,
             'description': self.description,
             'status': self.status.value, # 'start', 'pause', 'in-progress', 'done', 'close
@@ -88,6 +91,18 @@ class TaskModel(BaseModel):
             'end': self.end.isoformat() if self.end else None,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat(),
-            'user_ids': user_ids
         }
+        
+    @staticmethod
+    def get_tasks_for_user_by_status(user, status):
+        """
+        Get tasks for a given user filtered by status.
 
+        :param user: The user for whom to retrieve tasks
+        :param status: The status of the tasks to retrieve
+        :return: A list of tasks for the user with the specified status
+        """
+        return db.session.query(TaskModel).join(task_user_association).filter(
+            task_user_association.c.user_id == user.id,
+            TaskModel.status == status
+        ).all()
