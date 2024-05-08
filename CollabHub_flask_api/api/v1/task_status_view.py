@@ -25,8 +25,6 @@ def get_tasks_by_status(status):
     # Retrieve the authenticated user from the request context
     user = request.current_user
 
-    print(status, '----------------------------')
-    
     # Validate the status parameter
     if status not in TaskStatus.__members__:
         return jsonify(response_info(400, message=f'Invalid status: {status}'))
