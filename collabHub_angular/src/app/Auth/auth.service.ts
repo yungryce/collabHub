@@ -1,10 +1,11 @@
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+
 import { ApiResponse, AuthResponse, LoginData, RegistrationData, UserData } from './user';
 import { AlertService } from '../alert.service';
-
 
 
 @Injectable({
@@ -12,20 +13,18 @@ import { AlertService } from '../alert.service';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:5000/api/auth';
+  private userUrl = 'http://localhost:5000/api/v1/users';
   private tokenKey = 'authToken';
-
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
 
   constructor(
     private http: HttpClient,
     private alertService: AlertService,
+    private router: Router 
   ) { }
 
   register(userData: RegistrationData): Observable<ApiResponse<null>> {
     const url = `${this.apiUrl}/register`;
-    return this.http.post<ApiResponse<null>>(url, userData, this.httpOptions).pipe(
+    return this.http.post<ApiResponse<null>>(url, userData).pipe(
       tap(response => {
         if (response.status === 201) {
           this.alertService.successAlert('Registration successful.');
@@ -37,7 +36,7 @@ export class AuthService {
 
   login(credentials: LoginData): Observable<ApiResponse<AuthResponse>> {
     const url = `${this.apiUrl}/login`;
-    return this.http.post<ApiResponse<AuthResponse>>(url, credentials, this.httpOptions).pipe(
+    return this.http.post<ApiResponse<AuthResponse>>(url, credentials).pipe(
       tap(response => {
         if (response.status === 200 && response.data) {
           this.storeToken(response.data.token);
@@ -50,9 +49,13 @@ export class AuthService {
   }
 
   logout(): Observable<ApiResponse<null>> {
+    if (!this.isLoggedIn()) {
+      // Token is not present, no need to logout
+      return of({ status: 200, message: 'Already logged out' });
+    }
+
     const url = `${this.apiUrl}/logout`;
-    const headers = this.getHeaders();
-    return this.http.post<ApiResponse<null>>(url, {}, { headers }).pipe(
+    return this.http.post<ApiResponse<null>>(url, {}).pipe(
       tap(response => {
         if (response.status === 200) {
           localStorage.removeItem(this.tokenKey);
@@ -60,27 +63,25 @@ export class AuthService {
           this.alertService.successAlert('Logout successful.');
         }
       }),
-      catchError(this.handleError)
+      catchError(error => {
+        if (error.status === 401) {
+          // Token expired, so logout the user
+          this.logoutUser();
+        }
+        return this.handleError(error);
+      })
     );
   }
 
+  // rename to signify active user
   getUser(): Observable<ApiResponse<UserData>> {
-    const url = `${this.apiUrl}/user`;
-    return this.http.get<ApiResponse<UserData>>(url, this.httpOptions).pipe(
+    return this.http.get<ApiResponse<UserData>>(this.userUrl).pipe(
       tap(response => {
         if (response.status === 200 && response.data) {
           this.storeUserData(response.data);        }
       }),
       catchError(this.handleError)
     );
-  }
-
-  // Add the token to the headers of HTTP requests
-  getHeaders(): HttpHeaders {
-    const token = this.getToken();
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
   }
 
   getToken(): string | null {
@@ -98,6 +99,12 @@ export class AuthService {
   isLoggedIn(): Observable<boolean> {
     const token = this.getToken();
     return of(!!token); // Return Observable of boolean indicating authentication status
+  }
+
+  logoutUser(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('userData');
+    this.router.navigate(['/login']); // Redirect to login page
   }
   
   private handleError(error: HttpErrorResponse) {

@@ -6,8 +6,8 @@ import { Subject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 // import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { TaskService } from '../task.service';
-import { TaskModel } from '../task';
+import { TaskService } from '../Task/task.service';
+import { TaskModel } from '../Task/task';
 import Swal from 'sweetalert2';
 
 

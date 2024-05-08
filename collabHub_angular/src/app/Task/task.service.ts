@@ -4,8 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
-import { TaskModel, ResponseInfo } from './task';
-import { AuthService } from './Auth/auth.service';
+import { TaskModel, ResponseInfo, UserData } from './task';
+import { AuthService } from '../Auth/auth.service';
 
 
 @Injectable({
@@ -13,26 +13,16 @@ import { AuthService } from './Auth/auth.service';
 })
 export class TaskService {
   private apiUrl = 'http://localhost:5000/api/v1/tasks';
+  private userUrl = 'http://localhost:5000/api/v1/users';
 
   constructor(private authService: AuthService, private http: HttpClient) { }
 
   getTasks(): Observable<TaskModel[]> {
-    const token = this.authService.getToken();
-    if (!token) {
-      // No token found, throw an error
-      return throwError(new Error('Authentication token not found'));
-    }
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-
-    return this.http.get<ResponseInfo>(this.apiUrl, { headers }).pipe(
+    return this.http.get<ResponseInfo>(this.apiUrl).pipe(
       map((response: ResponseInfo) => {
         if (response.data && Array.isArray(response.data)) {
           // Tasks found, return the data
-          console.log(response.data);
           return response.data;
         } else {
           // No tasks found or invalid response, throw an error
@@ -48,16 +38,22 @@ export class TaskService {
     );
   }
 
-  private handleResponseStatus(status: number, message?: string): void {
-    let alertMessage = 'An error occurred';
-    if (message) {
-      alertMessage += `: ${message}`;
-    }
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: alertMessage
-    });
+  getUsername(userId: string): Observable<string> {
+    const url = `${this.userUrl}/${userId}/username`;
+  
+    return this.http.get<ResponseInfo>(url).pipe(
+      map((response: ResponseInfo) => {
+        if (response.data && typeof response.data === 'string') {
+          return response.data;
+        } else {
+          throw new Error('Invalid response format');
+        }
+      }),
+      catchError((error) => {
+        this.handleResponseError(error);
+        return throwError(error);
+      })
+    );
   }
 
   private handleResponseError(error: any): void {
@@ -68,3 +64,4 @@ export class TaskService {
     });
   }
 }
+

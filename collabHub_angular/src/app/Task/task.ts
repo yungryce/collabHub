@@ -1,13 +1,13 @@
 export interface TaskModel {
+  id: string;
   title: string;
   description?: string;
   status: TaskStatus;
   created_by: string;
   start?: Date;
   end?: Date;
-  users: string[];
+  user_ids: string[];
 }
-
 
 export enum TaskStatus {
   START = 'start',
@@ -15,6 +15,14 @@ export enum TaskStatus {
   IN_PROGRESS = 'in-progress',
   DONE = 'done',
   CLOSE = 'close'
+}
+
+export interface UserData {
+  id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
 }
 
 

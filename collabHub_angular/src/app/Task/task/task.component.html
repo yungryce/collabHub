@@ -1,0 +1,16 @@
+<div class="container mx-auto min-h-screen">
+  
+  <div class="bg-gray-400 flex justify-around py-4 mt-4">
+    <a routerLink="/tasks/new" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="font-bold hover:text-red-700" [ngClass]="{'active-link': isActive('/')}"><h4>New</h4></a>
+    <a routerLink="/tasks/all" routerLinkActive="active" class="font-bold hover:text-red-700" [ngClass]="{'active-link': isActive('/tasks/all')}"><h4>All</h4></a>
+    <a routerLink="/tasks/ongoing" routerLinkActive="active" class="font-bold hover:text-red-700" [ngClass]="{'active-link': isActive('/tasks/ongoing')}"><h4>Ongoing</h4></a>
+    <a routerLink="/tasks/paused" routerLinkActive="active" class="font-bold hover:text-red-700" [ngClass]="{'active-link': isActive('/tasks/paused')}"><h4>Paused</h4></a>
+    <a routerLink="/tasks/completed" routerLinkActive="active" class="font-bold hover:text-red-700" [ngClass]="{'active-link': isActive('/tasks/completed')}"><h4>Completed</h4></a>
+  </div>
+  
+  <div class="w-3/5 mt-4">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
+
