@@ -1,1 +1,42 @@
-<p>ongoing-tasks works!</p>
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg mx-2">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-400 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Title
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Collabs
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Status
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Deadline
+                </th>
+  
+            </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let task of ongoingTasks; let i = index;">
+            <tr class="bg-gray-{{ i % 2 === 0 ? '50' : 'white' }} dark:bg-gray-{{ i % 2 === 0 ? '800' : '900' }} border-b dark:border-gray-700">
+              <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                {{ task.title }}
+              </td>
+              <td class="px-6 py-4">
+                {{ displayUsernames(this.task) }}
+              </td>
+              <td class="px-6 py-4">
+                {{ task.status }}
+              </td>
+              <td class="px-6 py-4">
+                {{ task.end | date }}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+    </table>
+</div>
+<ng-template #noTasks>
+    <p>No tasks available</p>
+</ng-template> 

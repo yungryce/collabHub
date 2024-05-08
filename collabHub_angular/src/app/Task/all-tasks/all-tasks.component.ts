@@ -1,11 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
-import { TaskModel } from '../task';
+import { TaskModel,UserData } from '../task';
 import { UiUtilsService } from '../ui-utils.service';
 import { TaskComponent } from '../task/task.component';
+import { TaskService } from '../task.service';
 
 
 
@@ -22,30 +21,34 @@ import { TaskComponent } from '../task/task.component';
 export class AllTasksComponent {
   tasks: TaskModel[] = [];
   taskUsernames: { [taskId: string]: string[] } = {};
-  private unsubscribe$ = new Subject<void>(); 
 
-  constructor(private taskComponent: TaskComponent, private uiUtilsService: UiUtilsService) { }
-
+  constructor(private taskService: TaskService, private uiUtilsService: UiUtilsService) { }
 
   ngOnInit(): void {
-    this.taskComponent.tasksLoaded.pipe(takeUntil(this.unsubscribe$)).subscribe(tasks => {
-      this.tasks = tasks;
-      console.log('Tasks:', this.tasks);
-    });
-
-    this.taskComponent.taskUsernamesLoaded.pipe(takeUntil(this.unsubscribe$)).subscribe(taskUsernames => {
-      this.taskUsernames = taskUsernames;
-      console.log('Task Usernames:', this.taskUsernames);
-    });
+    this.fetchTasks();
   }
 
-  displayUsernames(usernames: string[] | undefined): string {
-    console.log(`usernames:`, this.uiUtilsService.displayUsernames(usernames));
+  fetchTasks(): void {
+    this.taskService.getTasks().subscribe(
+      (tasks: TaskModel[]) => {
+        this.tasks = tasks;
+  
+        // Use cached user data
+        const cachedUserData = localStorage.getItem('userData');
+        if (cachedUserData) {
+          const currentUserData: UserData = JSON.parse(cachedUserData);
+          this.uiUtilsService.fetchTasksAndUsernames(this.tasks, currentUserData.id);
+        }
+      },
+      (error) => {
+        console.error('Error fetching tasks:', error);
+      }
+    );
+  }
+    
+  displayUsernames(task: TaskModel): string {
+    const usernames = this.uiUtilsService.getUsernamesForTask(task.id);
     return this.uiUtilsService.displayUsernames(usernames);
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next(); // Complete the unsubscribe$ subject
-    this.unsubscribe$.complete();
-  }
 }

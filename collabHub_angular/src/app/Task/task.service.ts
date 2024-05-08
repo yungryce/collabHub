@@ -18,8 +18,28 @@ export class TaskService {
   constructor(private authService: AuthService, private http: HttpClient) { }
 
   getTasks(): Observable<TaskModel[]> {
-
     return this.http.get<ResponseInfo>(this.apiUrl).pipe(
+      map((response: ResponseInfo) => {
+        if (response.data && Array.isArray(response.data)) {
+          // Tasks found, return the data
+          return response.data;
+        } else {
+          // No tasks found or invalid response, throw an error
+          throw new Error('Invalid response format');
+        }
+      }),
+      catchError((error) => {
+        // Handle the error and display alert
+        this.handleResponseError(error);
+        // Rethrow the error to propagate it downstream
+        return throwError(error);
+      })
+    );
+  }
+
+  getTasksByStatus(status: string): Observable<TaskModel[]> {
+    const url = `${this.apiUrl}/status/${status}`;
+    return this.http.get<ResponseInfo>(url).pipe(
       map((response: ResponseInfo) => {
         if (response.data && Array.isArray(response.data)) {
           // Tasks found, return the data
