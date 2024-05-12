@@ -29,11 +29,11 @@ def get_user():
         if user:
             # Serialize the user object to a JSON-compatible dictionary
             user_data = user.to_json()
-            return jsonify(response_info(200, data=user_data))
+            return jsonify(response_info(200, message='Successful' , data=user_data))
         else:
-            return jsonify(response_info(404, message='User not found'))
+            return jsonify(response_info(404, message='Error', error='User not found'))
     except Exception as e:
-        return jsonify(response_info(500, message='Failed to fetch user details'))
+        return jsonify(response_info(500, message='Error', error='Failed to fetch user details'))
     
 @auth_views.route('/users/<user_id>/username', methods=['GET'])
 def get_username(user_id):
@@ -53,11 +53,11 @@ def get_username(user_id):
         # Check if the user exists
         if user:
             # Return the username
-            return jsonify(response_info(200, data=user.username))
+            return jsonify(response_info(200, message='Successful', data=user.username))
         else:
-            return jsonify(response_info(404, message='User not found'))
+            return jsonify(response_info(404, message='Error', error='User not found'))
     except Exception as e:
-        return jsonify(response_info(500, message='Failed to fetch username'))
+        return jsonify(response_info(500, message='Error', error='Failed to fetch user details'))
 
 
 @auth_views.route('/register', methods=['POST'])
@@ -79,7 +79,7 @@ def register():
     # Check if the username or email already exists
     if UserModel.get_first(username=username) or UserModel.get_first(email=email):
             error_message = 'Username or Email already exists'
-            return jsonify(response_info(409, message=error_message))
+            return jsonify(response_info(409, message='Error', error=error_message))
     
     # Proceed to create a new user since neither the username nor email are taken
     new_user = UserModel(
@@ -93,11 +93,11 @@ def register():
     # Save the new user to the database
     try:
         new_user.save()
-        return jsonify(response_info(201, message='User registered successfully'))
+        return jsonify(response_info(201, message='Successful'))
     except Exception as e:
         # Handle any errors that occur during the save operation
         error_message = 'Failed to register user: {}'.format(str(e))  # Construct error message
-        return jsonify(response_info(500, message=error_message))
+        return jsonify(response_info(500, message='Error', error=error_message))
 
 
 @auth_views.route('/login', methods=['POST'])
@@ -123,23 +123,23 @@ def login():
             token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         except Exception as e:
             error_message = 'Failed to generate Token: {}'.format(str(e))  # Construct error message
-            return jsonify(response_info(500, message=error_message))
+            return jsonify(response_info(500, message='Error', error=error_message))
 
         # Serialize the user object to a JSON-compatible dictionary
         user_data = user.to_json()
         
         if user_data:
-            return jsonify(response_info(200, message='Login successful', data={
+            return jsonify(response_info(200, message='Successful', data={
                 'token': token,
                 'user': user_data
             }))
         else:
             error_message = 'Failed to serialize user data'
-            return jsonify(response_info(500, message=error_message))
+            return jsonify(response_info(500, message='Error', error=error_message))
         
     else:
         error_message = 'Invalid username or password'
-        return jsonify(response_info(401, message=error_message))
+        return jsonify(response_info(401, message='Error', error=error_message))
 
 
 @auth_views.route('/logout', methods=['POST'])
@@ -154,7 +154,7 @@ def logout():
     try:
         blacklisted_token = BlacklistToken(token=token)
         blacklisted_token.save()
-        return jsonify(response_info(200, message='Logged out successfully'))
+        return jsonify(response_info(200, message='Successful'))
     except Exception as e:
         error_message = 'Failed to logout: {}'.format(str(e))
-        return jsonify(response_info(500, message=error_message))
+        return jsonify(response_info(500, message='Error', error=error_message))

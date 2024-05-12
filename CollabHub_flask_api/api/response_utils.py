@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 # Define a standardized response structure
-def response_info(status, message=None, data=None):
+def response_info(status, message=None, data=None, error=None):
     """
     Create a standardized JSON response.
 
@@ -21,6 +21,8 @@ def response_info(status, message=None, data=None):
         response_data['message'] = message
     if data:
         response_data['data'] = data
+    if error:
+        response_data['error'] = error
     return response_data
 
 

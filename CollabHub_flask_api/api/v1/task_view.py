@@ -22,7 +22,7 @@ from api.auth.auth_utils import authenticate, authorize
 # Modify the route to use the authentication decorator
 @task_views.route('/', methods=['GET'], strict_slashes=False)
 @authenticate
-def get():
+def get_all_tasks():
     # Retrieve the authenticated user from the request context
     user = request.current_user
 
@@ -30,7 +30,34 @@ def get():
     tasks = user.tasks
     tasks_json = [task.to_json() for task in tasks]
 
-    return jsonify(response_info(200, message='Successful', data=tasks_json))
+    # Check if there are any tasks
+    if tasks_json:
+        return jsonify(response_info(200, message='Successful', data=tasks_json))
+    else:
+        return jsonify(response_info(404, message='Error', error='No tasks found'))
+
+
+@task_views.route('/status/<status>', methods=['GET'], strict_slashes=False)
+@authenticate
+def get_tasks_by_status(status):
+    # Retrieve the authenticated user from the request context
+    user = request.current_user
+
+    # Validate the status parameter
+    if status not in TaskStatus.__members__:
+        return jsonify(response_info(400, message='Error', error=f'Invalid status: {status}'))
+
+    # Fetch tasks for the authenticated user filtered by status
+    filtered_tasks = TaskModel.get_tasks_for_user_by_status(user, TaskStatus[status.upper()])
+
+    # Convert tasks to JSON format
+    tasks_json = [task.to_json() for task in filtered_tasks]
+    
+    # Check if there are any tasks
+    if tasks_json:
+        return jsonify(response_info(200, message='Successful', data=tasks_json))
+    else:
+        return jsonify(response_info(404, message='Error', error=f'No tasks found with status {status}'))
 
 
 @task_views.route('/<task_id>', methods=['GET'], strict_slashes=False)
@@ -53,7 +80,7 @@ def get_task(task_id):
     
     # Check if the task exists and is associated with the authenticated user
     if not task or user not in task.users:
-        return jsonify(response_info(404, message='Task not found'))
+        return jsonify(response_info(404, message='Error', error='Task not found'))
 
     return jsonify(response_info(200, message='Successful', data=task.to_json()))
 
@@ -71,7 +98,7 @@ def create_task():
     Returns:
         JSON response with the created task, or error response if validation fails
     """
-    error = validate_json('title', 'description', 'status', 'start', 'end')
+    error = validate_json('title', 'description', 'start', 'end')
     if error:
         return error
 
@@ -81,12 +108,14 @@ def create_task():
     description = data['description']
     start = data['start']
     end = data['end']
-    assigned_users = data.get('assigned_users', [])
+    assigned_users = data.get('user_ids', [])
     
-    new_task = TaskModel(title=title, description=description, start=start, end=end)
+    user = request.current_user
+    created_by = user.id
+    
+    new_task = TaskModel(title=title, description=description, start=start, end=end, created_by=created_by)
     
     # Associate the task with the current user    
-    user = request.current_user
     user.tasks.append(new_task)
     
     # Assign the task to additional users
@@ -114,7 +143,7 @@ def update_task(task_id):
     """
     task = TaskModel.get_first(id=task_id)
     if not task:
-        return jsonify(response_info(404, message="Task not found"))
+        return jsonify(response_info(404, message="Error", error="Task not found"))
         
     # Define the fields we want to update
     fields_to_update = ['title', 'description', 'status', 'start', 'end']
@@ -131,7 +160,7 @@ def update_task(task_id):
             if field == 'status':
                 status = data[field]
                 if status not in TaskStatus._value2member_map_:
-                    return jsonify(response_info(400, message='Invalid status value'))
+                    return jsonify(response_info(400, message='Error', error=f'Invalid status: {status}'))
                 setattr(task, field, TaskStatus(status))
             else:
                 setattr(task, field, data[field])
@@ -169,7 +198,7 @@ def delete_task(task_id):
     """
     task = TaskModel.get_first(id=task_id)
     if not task:
-        return jsonify(response_info(404, message="Task not found"))
+        return jsonify(response_info(404, message="Error", error="Task not found"))
 
     # Remove associated users from the task
     task.users.clear()

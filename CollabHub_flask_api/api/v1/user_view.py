@@ -18,6 +18,39 @@ from models.users import UserModel
 from api.v1 import user_views
 from api.response_utils import validate_json, response_info
 from api.auth.auth_utils import authenticate, authorize
+from sqlalchemy import or_
+
+
+@user_views.route('/exists', methods=['GET'])
+@authenticate
+def check_user_exists():
+    """
+    Check if a user exists using a username or email.
+
+    Query Parameters:
+        - identifier (str): The username or email of the user to check.
+
+    Returns:
+        JSON response with a boolean indicating whether the user exists or not.
+    """
+    try:
+        # Get the identifier from the query parameters
+        identifier = request.args.get('identifier')
+
+        # Check if the identifier is provided
+        if not identifier:
+            return jsonify(response_info(400, message='Error', error='Identifier is missing'))
+
+        # Check if a user with the provided username or email exists
+        user = UserModel.query.filter(or_(UserModel.username == identifier, UserModel.email == identifier)).first()
+
+        # If user exists, return their ID
+        if user:
+            return jsonify(response_info(200, message='Successful', data=user.id))
+        else:
+            return jsonify(response_info(404, message='Error', error='User not found'))
+    except Exception as e:
+        return jsonify(response_info(500, message='Error', error='Failed to check if user exists'))
 
 
 @user_views.route('/', methods=['GET'])
@@ -37,11 +70,11 @@ def get_user():
         if user:
             # Serialize the user object to a JSON-compatible dictionary
             user_data = user.to_json()
-            return jsonify(response_info(200, data=user_data))
+            return jsonify(response_info(200, message='Successful', data=user_data))
         else:
-            return jsonify(response_info(404, message='User not found'))
+            return jsonify(response_info(404, message='Error', error='User not found'))
     except Exception as e:
-        return jsonify(response_info(500, message='Failed to fetch user details'))
+        return jsonify(response_info(500, message='Error', error='Failed to fetch user details'))
     
     
 @user_views.route('<user_id>/username', methods=['GET'])
@@ -63,8 +96,8 @@ def get_username(user_id):
         # Check if the user exists
         if user:
             # Return the username
-            return jsonify(response_info(200, data=user.username))
+            return jsonify(response_info(200, message='Successful' , data=user.username))
         else:
-            return jsonify(response_info(404, message='User not found'))
+            return jsonify(response_info(404, message='Error', error='User not found'))
     except Exception as e:
-        return jsonify(response_info(500, message='Failed to fetch username'))
+        return jsonify(response_info(500, message='Error', error='Failed to fetch user details'))
