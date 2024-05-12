@@ -20,7 +20,7 @@ export class DashboardComponent {
   constructor(private authService: AuthService, private router:Router) { }
 
   ngOnInit() {
-    this.authService.isLoggedIn()
+    this.authService.isLoggedInObservable()
       .subscribe(isLoggedIn => {
         this.isLoggedIn = isLoggedIn;
       });

@@ -7,7 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 // import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { TaskService } from '../Task/task.service';
-import { TaskModel } from '../Task/task';
+import { TaskModel } from '../collabHub';
 import Swal from 'sweetalert2';
 
 
@@ -74,19 +74,24 @@ export class CalendarComponent {
 
   fetchTasks() {
     this.taskService.getTasks().subscribe(tasks => {
-      // Convert tasks to calendar events
-      this.events = tasks.map(task => {
-        return {
-          start: task.start ? new Date(task.start) : new Date(),
-          end: task.end ? new Date(task.end) : new Date(),
-          title: task.title,
-          actions: this.actions
-        };
-      });
-      // Refresh the calendar to display the events
-      this.refresh.next();
+      if (tasks !== null) {
+        // Convert tasks to calendar events
+        this.events = tasks.map(task => {
+          return {
+            start: task.start ? new Date(task.start) : new Date(),
+            end: task.end ? new Date(task.end) : new Date(),
+            title: task.title,
+            actions: this.actions
+          };
+        });
+        // Refresh the calendar to display the events
+        this.refresh.next();
+      } else {
+        console.error('No tasks found.');
+      }
     });
   }
+  
 
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {

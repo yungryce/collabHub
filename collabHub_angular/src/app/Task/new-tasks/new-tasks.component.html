@@ -1,1 +1,40 @@
-<p>new-tasks works!</p>
+<div class="container mx-auto">
+  <form [formGroup]="createTaskForm" (ngSubmit)="onSubmit()">
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="title">Title</label>
+      <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="title" type="text" placeholder="Enter title" formControlName="title">
+      <div *ngIf="createTaskForm.get('title')?.invalid && createTaskForm.get('title')?.touched" class="text-red-500 text-sm mt-1">Title is required</div>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="description">Description</label>
+      <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="description" placeholder="Enter description" formControlName="description" rows="4"></textarea>
+      <div *ngIf="createTaskForm.get('description')?.invalid && createTaskForm.get('description')?.touched" class="text-red-500 text-sm mt-1">Description is required</div>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="start">Start Date</label>
+      <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="start" type="datetime-local" formControlName="start">
+      <div *ngIf="createTaskForm.get('start')?.invalid && createTaskForm.get('start')?.touched" class="text-red-500 text-sm mt-1">Start date is required</div>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="end">End Date</label>
+      <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="end" type="datetime-local" formControlName="end">
+      <div *ngIf="createTaskForm.get('end')?.invalid && createTaskForm.get('end')?.touched" class="text-red-500 text-sm mt-1">End date is required</div>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="user_ids">Collabs</label>
+      <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="user_ids" type="text" placeholder="Enter user IDs (comma separated)" formControlName="user_ids">
+    </div>
+    <div class="flex items-center justify-between">
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit" [disabled]="createTaskForm.invalid || createTaskForm.hasError('mismatch')">
+        Create Task
+      </button>
+    </div>
+  </form>
+  </div>
+  

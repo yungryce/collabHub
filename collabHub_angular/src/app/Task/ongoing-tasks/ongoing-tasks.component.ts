@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 import { TaskService } from '../task.service';
-import { TaskModel, UserData } from '../task';
+import { TaskModel, UserData } from '../../collabHub';
 import { UiUtilsService } from '../ui-utils.service';
-import { CommonModule } from '@angular/common';
+import { AlertService } from '../../alert.service';
 
 
 @Component({
@@ -19,7 +21,12 @@ export class OngoingTasksComponent {
   ongoingTasks: TaskModel[] = [];
   taskUsernames: { [taskId: string]: string[] } = {};
 
-  constructor(private taskService: TaskService, private uiUtilsService: UiUtilsService) { }
+  constructor(
+    private taskService: TaskService,
+    private uiUtilsService: UiUtilsService,
+    private alertService: AlertService,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
     this.fetchOngoingTasks();
@@ -28,16 +35,22 @@ export class OngoingTasksComponent {
   fetchOngoingTasks(): void {
     const status = 'IN_PROGRESS'; // Adjust this based on your backend endpoint
     this.taskService.getTasksByStatus(status).subscribe(
-      (tasks: TaskModel[]) => {
-        this.ongoingTasks = tasks;
-
-        // Use cached user data
-        const cachedUserData = localStorage.getItem('userData');
-        if (cachedUserData) {
-          const currentUserData: UserData = JSON.parse(cachedUserData);
-          this.uiUtilsService.fetchTasksAndUsernames(this.ongoingTasks, currentUserData.id);
+      (tasks: TaskModel[] | null) => {
+        if (tasks !== null) {
+          this.ongoingTasks = tasks;
+  
+          // Use cached user data
+          const cachedUserData = localStorage.getItem('userData');
+          if (cachedUserData) {
+            const currentUserData: UserData = JSON.parse(cachedUserData);
+            this.uiUtilsService.fetchTasksAndUsernames(this.ongoingTasks, currentUserData.id);
+          }
+        } else {
+          // Handle case where tasks is null
+          console.error('No tasks Ongoing.');
+          this.alertService.showAlert('You currently have no Ongoing tasks.', 'info', 'Start creating tasks');
+          this.router.navigate(['/tasks/new']);
         }
-          
       },
       (error) => {
         console.error('Error fetching ongoing tasks:', error);
@@ -45,6 +58,7 @@ export class OngoingTasksComponent {
       }
     );
   }
+  
 
   displayUsernames(task: TaskModel): string {
     const usernames = this.uiUtilsService.getUsernamesForTask(task.id);

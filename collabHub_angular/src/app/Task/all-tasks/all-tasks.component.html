@@ -30,8 +30,15 @@
                 {{ task.status }}
               </td>
               <td class="px-6 py-4">
-                {{ task.end | date }}
-              </td>
+                <div class="flex justify-stretch">
+                  <div class="">
+                    {{ task.end | date }}
+                  </div>
+                  <div class="flex flex-col space-y-3">
+                    <i class="fa-solid fa-pen-to-square" (click)="editTask(task)"></i>
+                    <i class="fa-solid fa-trash cursor-pointer" (click)="deleteTask(task.id)"></i>
+                  </div>
+                </div>
             </tr>
           </ng-container>
         </tbody>

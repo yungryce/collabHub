@@ -1,44 +1,46 @@
-<div class="container">
-  <h2>Register</h2>
-  <form [formGroup]="registerForm" (ngSubmit)="register()">
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input type="text" class="form-control" id="username" formControlName="username">
-      <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="text-danger">Username is required.</div>
-    </div>
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="email" class="form-control" id="email" formControlName="email">
-      <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-danger">Email is required.</div>
-    </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input type="password" class="form-control" id="password" formControlName="password">
-      <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-danger">
-        <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</div>
-        <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters.</div>
+<div class="container mx-auto flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-md my-4">
+    <h2 class="text-2xl font-bold mb-4 text-center">Register</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="register()" class="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div class="mb-4">
+        <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+        <input type="text" id="username" formControlName="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="text-red-500 text-xs font-semibold italic">Username is required.</div>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="confirmPassword">Confirm Password:</label>
-      <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword">
-      <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" class="text-danger">
-        <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirm password is required.</div>
+      <div class="mb-4">
+        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+        <input type="email" id="email" formControlName="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-red-500 text-xs font-semibold  italic">Email is required.</div>
       </div>
-    </div>
-    <div *ngIf="registerForm.hasError('mismatch')" class="text-danger">
-      <p>Passwords must match.</p>
-    </div>
-    <div class="form-group">
-      <label for="firstName">First Name:</label>
-      <input type="text" class="form-control" id="firstName" formControlName="first_name">
-      <div *ngIf="registerForm.get('first_name')?.invalid && registerForm.get('first_name')?.touched" class="text-danger">First name is required.</div>
-    </div>
-    <div class="form-group">
-      <label for="lastName">Last Name:</label>
-      <input type="text" class="form-control" id="lastName" formControlName="last_name">
-      <div *ngIf="registerForm.get('last_name')?.invalid && registerForm.get('last_name')?.touched" class="text-danger">Last name is required.</div>
-    </div>
-    <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || registerForm.hasError('mismatch')">Register</button>
-  </form>
+      <div class="mb-4">
+        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+        <input type="password" id="password" formControlName="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-red-500 text-xs font-semibold italic">
+          <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</div>
+          <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters.</div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label for="confirmPassword" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password:</label>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" class="text-red-500 text-xs font-semibold italic">
+          <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirm password is required.</div>
+        </div>
+      </div>
+      <div *ngIf="registerForm.hasError('mismatch')" class="text-red-500 text-xs font-semibold italic mb-4">
+        <p>Passwords must match.</p>
+      </div>
+      <div class="mb-4">
+        <label for="firstName" class="block text-gray-700 text-sm font-bold mb-2">First Name:</label>
+        <input type="text" id="firstName" formControlName="first_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div *ngIf="registerForm.get('first_name')?.invalid && registerForm.get('first_name')?.touched" class="text-red-500 text-xs font-semibold italic">First name is required.</div>
+      </div>
+      <div class="mb-4">
+        <label for="lastName" class="block text-gray-700 text-sm font-bold mb-2">Last Name:</label>
+        <input type="text" id="lastName" formControlName="last_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div *ngIf="registerForm.get('last_name')?.invalid && registerForm.get('last_name')?.touched" class="text-red-500 text-xs font-semibold italic">Last name is required.</div>
+      </div>
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" [disabled]="registerForm.invalid || registerForm.hasError('mismatch')">Register</button>
+    </form>
+  </div>
 </div>

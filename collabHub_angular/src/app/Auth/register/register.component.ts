@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 
-import { RegistrationData } from '../user';
+import { RegistrationData } from '../../collabHub';
 import { AuthService } from '../auth.service';
 import { AlertService } from '../../alert.service';
 
@@ -52,11 +52,6 @@ export class RegisterComponent {
   }
 
   register(): void {
-    if (this.registerForm.invalid || this.registerForm.hasError('mismatch')) {
-      this.alertService.errorAlert('Please fill in all fields correctly.');
-      return;
-    }
-
     const userData: RegistrationData = this.registerForm.value;
 
     this.authService.register(userData)

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { TaskService } from './task.service';
-import { TaskModel } from './task';
+import { TaskModel } from '../collabHub';
 
 
 @Injectable({

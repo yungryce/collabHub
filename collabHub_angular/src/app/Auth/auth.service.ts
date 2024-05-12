@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
-import { ApiResponse, AuthResponse, LoginData, RegistrationData, UserData } from './user';
+import { ApiResponse, AuthResponse, LoginData, RegistrationData, UserData, ResponseInfo } from '../collabHub';
 import { AlertService } from '../alert.service';
+import { ErrorService } from '../error.service';
 
 
 @Injectable({
@@ -16,71 +17,85 @@ export class AuthService {
   private userUrl = 'http://localhost:5000/api/v1/users';
   private tokenKey = 'authToken';
 
+  // private authenticationStatusSubject = new Subject<boolean>();
+  private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   constructor(
     private http: HttpClient,
     private alertService: AlertService,
-    private router: Router 
-  ) { }
+    private router: Router,
+    public errorService: ErrorService
+  ) { 
+      // Check authentication status on initialization
+      this.isLoggedInSubject.next(this.isLoggedIn());
+   }
 
-  register(userData: RegistrationData): Observable<ApiResponse<null>> {
-    const url = `${this.apiUrl}/register`;
-    return this.http.post<ApiResponse<null>>(url, userData).pipe(
+
+  // rename to signify active user
+  getUser(): Observable<ResponseInfo> {
+    return this.http.get<ApiResponse<UserData>>(this.userUrl).pipe(
       tap(response => {
-        if (response.status === 201) {
-          this.alertService.successAlert('Registration successful.');
+        if (response.status === 200 && response.data) {
+          this.storeUserData(response.data);
         }
       }),
-      catchError(this.handleError)
+      catchError(this.errorService.handleError)
     );
   }
 
-  login(credentials: LoginData): Observable<ApiResponse<AuthResponse>> {
+  register(userData: RegistrationData): Observable<ResponseInfo> {
+    const url = `${this.apiUrl}/register`;
+    return this.http.post<ResponseInfo>(url, userData).pipe(
+      tap(response => {
+        if (response.status === 201 && response.message === 'Successful') {
+          console.log('Registration successful:', response);
+          this.alertService.showAlert('Registration successful.', 'success', 'Success');
+        }
+      }),
+      catchError(this.errorService.handleError)
+    );
+  }
+
+  login(credentials: LoginData): Observable<ResponseInfo> {
     const url = `${this.apiUrl}/login`;
     return this.http.post<ApiResponse<AuthResponse>>(url, credentials).pipe(
       tap(response => {
         if (response.status === 200 && response.data) {
           this.storeToken(response.data.token);
           this.storeUserData(response.data.user); // Store user data to local storage
-          this.alertService.successAlert('Login successful.');
+          // this.authenticationStatusSubject.next(true);
+          this.isLoggedInSubject.next(true);
+          this.alertService.showAlert('Login successful.', 'success', 'Success');
         }
       }),
-      catchError(this.handleError)
+      
+      catchError(this.errorService.handleError)
     );
   }
 
-  logout(): Observable<ApiResponse<null>> {
+  logout(): Observable<ResponseInfo> {
     if (!this.isLoggedIn()) {
-      // Token is not present, no need to logout
+      this.alertService.showAlert('Please log in to perform this action.', 'info', 'Please Log In')
+        .then(() => {
+          // Redirect the user to the login page
+          this.router.navigate(['/login']);
+        });
+      // Return an empty observable since the user is not logged in
       return of({ status: 200, message: 'Already logged out' });
     }
-
+  
     const url = `${this.apiUrl}/logout`;
-    return this.http.post<ApiResponse<null>>(url, {}).pipe(
+    return this.http.post<ResponseInfo>(url, {}).pipe(
       tap(response => {
-        if (response.status === 200) {
+        if (response.status === 200 && response.message === 'Successful') {
           localStorage.removeItem(this.tokenKey);
           localStorage.removeItem('userData');
-          this.alertService.successAlert('Logout successful.');
+          this.isLoggedInSubject.next(false);
+          this.alertService.showAlert('Logout successful.', 'success', 'Success');
         }
       }),
-      catchError(error => {
-        if (error.status === 401) {
-          // Token expired, so logout the user
-          this.logoutUser();
-        }
-        return this.handleError(error);
-      })
-    );
-  }
 
-  // rename to signify active user
-  getUser(): Observable<ApiResponse<UserData>> {
-    return this.http.get<ApiResponse<UserData>>(this.userUrl).pipe(
-      tap(response => {
-        if (response.status === 200 && response.data) {
-          this.storeUserData(response.data);        }
-      }),
-      catchError(this.handleError)
+      catchError(this.errorService.handleError)
     );
   }
 
@@ -96,9 +111,13 @@ export class AuthService {
     localStorage.setItem('userData', JSON.stringify(user));
   }
 
-  isLoggedIn(): Observable<boolean> {
+  isLoggedIn(): boolean {
     const token = this.getToken();
-    return of(!!token); // Return Observable of boolean indicating authentication status
+    return !!token; // Return boolean indicating authentication status
+  }
+
+  isLoggedInObservable(): Observable<boolean> {
+    return this.isLoggedInSubject.asObservable(); // Return observable of boolean indicating authentication status
   }
 
   logoutUser(): void {
@@ -107,17 +126,4 @@ export class AuthService {
     this.router.navigate(['/login']); // Redirect to login page
   }
   
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // The backend returned an unsuccessful response code.
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    console.error(errorMessage);
-    this.alertService.errorAlert(errorMessage);
-    return throwError(() => new Error(errorMessage));
-  }
 }

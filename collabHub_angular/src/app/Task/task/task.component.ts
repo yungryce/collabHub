@@ -5,7 +5,7 @@ import { Observable, Subject, of, forkJoin } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
 import { TaskService } from '../task.service';
-import { TaskModel, UserData } from '../task';
+import { TaskModel, UserData } from '../../collabHub';
 import { AllTasksComponent } from '../all-tasks/all-tasks.component';
 
 
