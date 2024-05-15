@@ -73,7 +73,7 @@ export class CalendarComponent {
   }
 
   fetchTasks() {
-    this.taskService.getTasks().subscribe(tasks => {
+    this.taskService.getAllTasks().subscribe(tasks => {
       if (tasks !== null) {
         // Convert tasks to calendar events
         this.events = tasks.map(task => {

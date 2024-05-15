@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 import { TaskService } from './task.service';
 import { TaskModel } from '../collabHub';
@@ -7,11 +8,17 @@ import { TaskModel } from '../collabHub';
 @Injectable({
   providedIn: 'root'
 })
-export class UiUtilsService {
+export class TaskUserUtilsService {
   // Define a property to store usernames for each task
   private taskUsernamesMap: { [taskId: string]: string[] } = {};
+  private selectedTaskIdSource = new BehaviorSubject<string | null>(null);
+  selectedTaskId$ = this.selectedTaskIdSource.asObservable();
 
   constructor(private taskService: TaskService) { }
+
+  setSelectedTaskId(taskId: string): void {
+    this.selectedTaskIdSource.next(taskId);
+  }
 
   fetchTasksAndUsernames(tasks: TaskModel[], currentUserId: string): void {
     // Clear the taskUsernamesMap before populating it with new usernames

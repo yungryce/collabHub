@@ -32,6 +32,15 @@ export interface TaskModel {
   user_ids: string[];
 }
 
+export interface TaskAttachment {
+  id: string;
+  task_id: string;
+  file?: string;
+  link?: string;
+  tag?: string;
+  info: string;
+}
+
 export enum TaskStatus {
   START = 'start',
   PAUSE = 'pause',

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { TaskService } from '../task.service';
 import { TaskModel, UserData } from '../../collabHub';
-import { UiUtilsService } from '../ui-utils.service';
+import { TaskUserUtilsService } from '../task-user-utils.service';
 import { AlertService } from '../../alert.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class CompletedTasksComponent {
 
   constructor(
     private taskService: TaskService,
-    private uiUtilsService: UiUtilsService,
+    private taskUserUtilsService: TaskUserUtilsService,
     private alertService: AlertService,
     private router: Router,
   ) { }
@@ -42,7 +42,7 @@ export class CompletedTasksComponent {
         const cachedUserData = localStorage.getItem('userData');
         if (cachedUserData) {
           const currentUserData: UserData = JSON.parse(cachedUserData);
-          this.uiUtilsService.fetchTasksAndUsernames(this.completedTasks, currentUserData.id);
+          this.taskUserUtilsService.fetchTasksAndUsernames(this.completedTasks, currentUserData.id);
         }
       } else {
         // Handle case where tasks is null
@@ -59,7 +59,7 @@ export class CompletedTasksComponent {
   }
 
   displayUsernames(task: TaskModel): string {
-    const usernames = this.uiUtilsService.getUsernamesForTask(task.id);
-    return this.uiUtilsService.displayUsernames(usernames);
+    const usernames = this.taskUserUtilsService.getUsernamesForTask(task.id);
+    return this.taskUserUtilsService.displayUsernames(usernames);
   }
 }

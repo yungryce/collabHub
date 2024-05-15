@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { TaskModel,UserData } from '../../collabHub';
-import { UiUtilsService } from '../ui-utils.service';
+import { TaskUserUtilsService } from '../task-user-utils.service';
 
 import { TaskService } from '../task.service';
 import { AlertService } from '../../alert.service';
@@ -14,6 +14,7 @@ import { AlertService } from '../../alert.service';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
   ],
   templateUrl: './all-tasks.component.html',
   styleUrl: './all-tasks.component.css'
@@ -24,7 +25,7 @@ export class AllTasksComponent {
 
   constructor(
     private taskService: TaskService,
-    private uiUtilsService: UiUtilsService,
+    private taskUserUtilsService: TaskUserUtilsService,
     private alertService: AlertService,
     private router: Router,
   ) { }
@@ -34,16 +35,15 @@ export class AllTasksComponent {
   }
 
   fetchTasks(): void {
-    this.taskService.getTasks().subscribe(
+    this.taskService.getAllTasks().subscribe(
       (tasks: TaskModel[] | null) => {
       if (tasks !== null) {
         this.tasks = tasks;
-
         // Use cached user data
         const cachedUserData = localStorage.getItem('userData');
         if (cachedUserData) {
           const currentUserData: UserData = JSON.parse(cachedUserData);
-          this.uiUtilsService.fetchTasksAndUsernames(this.tasks, currentUserData.id);
+          this.taskUserUtilsService.fetchTasksAndUsernames(this.tasks, currentUserData.id);
         }
       } else {
         // Handle case where tasks is null
@@ -59,32 +59,18 @@ export class AllTasksComponent {
   }
     
   displayUsernames(task: TaskModel): string {
-    const usernames = this.uiUtilsService.getUsernamesForTask(task.id);
-    return this.uiUtilsService.displayUsernames(usernames);
+    const usernames = this.taskUserUtilsService.getUsernamesForTask(task.id);
+    return this.taskUserUtilsService.displayUsernames(usernames);
   }
 
   editTask(task: TaskModel): void {
-    // Call method from TaskService to update task
-    this.taskService.updateTask(task).subscribe(
-      (updatedTask: TaskModel) => {
-        // Handle success response
-        console.log('Task updated successfully:', updatedTask);
-      },
-      (error) => {
-        // Handle error response
-        console.error('Error updating task:', error);
-      }
-    );
+    this.taskUserUtilsService.setSelectedTaskId(task.id);
   }
 
   deleteTask(taskId: string): void {
-    // Show alert from AlertService
-    this.alertService.showAlert('You currently have no tasks.', 'info', 'Start creating tasks')
-      .then(() => {
-        // Show confirmation alert from AlertService
-        return this.alertService.confirmAlert('Are you sure?', 'warning', 'Are you sure you want to delete this task?');
-      })
-      .then((result) => {
+    // Show confirmation alert from AlertService
+    this.alertService.confirmAlert('Are you sure?', 'warning', 'Are you sure you want to delete this task?')
+      .then(result => {
         if (result.isConfirmed) {
           // If confirmed, call the task service to delete the task
           this.taskService.deleteTask(taskId).subscribe(() => {
@@ -92,6 +78,10 @@ export class AllTasksComponent {
             this.tasks = this.tasks.filter(task => task.id !== taskId);
             // Show success message
             this.alertService.showAlert('Your task has been deleted.', 'success', 'Deleted!');
+          }, error => {
+            // Show error message if deletion fails
+            console.error('Error deleting task:', error);
+            this.alertService.showAlert('Error deleting task', 'error', 'Deletion Failed');
           });
         }
       });

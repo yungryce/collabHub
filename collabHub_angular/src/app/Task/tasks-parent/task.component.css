@@ -1,0 +1,6 @@
+/* Custom class for active link styling */
+.active-link {
+    font-weight: bold;
+    color: red;
+  }
+  

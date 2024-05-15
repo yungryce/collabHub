@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
 
 import { ApiResponse, AuthResponse, LoginData, RegistrationData, UserData, ResponseInfo } from '../collabHub';
 import { AlertService } from '../alert.service';
@@ -30,6 +30,24 @@ export class AuthService {
       this.isLoggedInSubject.next(this.isLoggedIn());
    }
 
+  checkUserExists(userIdentifier: string): Observable<string | null> {
+    const url = `${this.userUrl}/exists?identifier=${userIdentifier}`;
+  
+    return this.http.get<ResponseInfo>(url).pipe(
+      map((response: ResponseInfo) => {
+        console.log('User exists:', response);
+        if (response.status === 200 && response.message === 'Successful' && response.data) {
+          return response.data; // Return the user ID
+        } else if (response.status === 404 && response.message === 'Not Found') {
+          throwError('User not found');
+        }
+        return null;
+      }),
+      catchError(this.errorService.handleError)
+
+    );
+  }
+  
 
   // rename to signify active user
   getUser(): Observable<ResponseInfo> {
@@ -61,11 +79,15 @@ export class AuthService {
     return this.http.post<ApiResponse<AuthResponse>>(url, credentials).pipe(
       tap(response => {
         if (response.status === 200 && response.data) {
+          console.log(response.status, response.message);
           this.storeToken(response.data.token);
           this.storeUserData(response.data.user); // Store user data to local storage
           // this.authenticationStatusSubject.next(true);
           this.isLoggedInSubject.next(true);
           this.alertService.showAlert('Login successful.', 'success', 'Success');
+        }
+        else {
+          this.alertService.showAlert('Invalid Username or Password.', 'error', 'Error');
         }
       }),
       
