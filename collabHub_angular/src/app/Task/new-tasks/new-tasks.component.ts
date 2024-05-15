@@ -67,7 +67,7 @@ export class NewTasksComponent {
     // Check TaskDetailsService for selected task ID
     this.taskUserUtilsService.selectedTaskId$.subscribe(taskId => {
       if (!this.selectedTaskId && taskId) {
-        this.selectedTaskId = taskId; // Set selectedTaskId from TaskDetailsService if not already set
+        this.selectedTaskId = taskId; // Set selectedTaskId from taskUserUtilsService if not already set
         this.taskService.getTask(taskId).subscribe(task => {
           this.task = task;
           this.populateForm(task);
@@ -85,14 +85,14 @@ export class NewTasksComponent {
       user_ids: [''],
     });
   }
-  
   populateForm(task: TaskModel | null): void {
     if (task) {
+      console.log('Populating form with task:', task);
       this.createTaskForm.patchValue({
         title: task.title,
         description: task.description,
-        start: task.start ? this.dateTimeUtils.formatDateTime(task.start.toISOString()) : '',
-        end: task.end ? this.dateTimeUtils.formatDateTime(task.end.toISOString()) : '',
+        start: task.start ? this.dateTimeUtils.formatDateTime(task.start) : '',
+        end: task.end ? this.dateTimeUtils.formatDateTime(task.end) : '',
         user_ids: task.user_ids ? task.user_ids.join(', ') : '',
       });
     }
@@ -104,8 +104,8 @@ export class NewTasksComponent {
     const formData = { ...this.createTaskForm.value };
   
     // Format start and end dates as YYYY-MM-DD HH:MM:SS
-    formData.start = this.dateTimeUtils.formatDateTime(formData.start);
-    formData.end = this.dateTimeUtils.formatDateTime(formData.end);
+    formData.start = this.dateTimeUtils.formatDateForInput(formData.start);
+    formData.end = this.dateTimeUtils.formatDateForInput(formData.end);
     const collabs: string[] = formData.user_ids.split(',')
     .map((id: string) => id.trim())
     .filter((id: string) => id);

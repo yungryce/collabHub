@@ -35,7 +35,6 @@ export class AuthService {
   
     return this.http.get<ResponseInfo>(url).pipe(
       map((response: ResponseInfo) => {
-        console.log('User exists:', response);
         if (response.status === 200 && response.message === 'Successful' && response.data) {
           return response.data; // Return the user ID
         } else if (response.status === 404 && response.message === 'Not Found') {

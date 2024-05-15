@@ -27,8 +27,8 @@ export interface TaskModel {
   description?: string;
   status: TaskStatus;
   created_by: string;
-  start?: Date;
-  end?: Date;
+  start: Date;
+  end: Date;
   user_ids: string[];
 }
 

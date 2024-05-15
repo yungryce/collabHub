@@ -65,6 +65,7 @@ export class AllTasksComponent {
 
   editTask(task: TaskModel): void {
     this.taskUserUtilsService.setSelectedTaskId(task.id);
+    this.router.navigate(['/tasks/new']);
   }
 
   deleteTask(taskId: string): void {

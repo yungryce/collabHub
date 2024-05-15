@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { format, parseISO } from 'date-fns';
+
 
 @Injectable({
   providedIn: 'root'
@@ -8,13 +10,16 @@ export class DateTimeUtilsService {
   constructor() { }
 
   getCurrentDateTime(): string {
-    const now = new Date();
-    return now.toISOString();
+    return new Date().toISOString();
   }
 
-  formatDateTime(dateTime: string): string {
-    const date = new Date(dateTime);
-    const formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
-    return formattedDate;
+  formatDateTime(dateTime: Date | string): string {
+    const date = typeof dateTime === 'string' ? parseISO(dateTime) : dateTime;
+    return format(date, 'yyyy-MM-dd HH:mm:ss');
+  }
+
+  formatDateForInput(date: Date): string {
+    return format(date, 'yyyy-MM-dd HH:mm:ss');
   }
 }
+

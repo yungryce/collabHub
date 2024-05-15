@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { TaskModel, ResponseInfo, TaskAttachment } from '../collabHub';
@@ -65,10 +65,17 @@ export class TaskService {
   }
 
   createTask(taskData: TaskModel): Observable<ResponseInfo> {
+    console.log(taskData);
     return this.http.post<ResponseInfo>(this.apiUrl, taskData).pipe(
       tap((response: ResponseInfo) => {
         if (response.status === 201 && response.message === 'Successful') {
           this.alertService.showAlert('Task created Successfully.', 'success', 'Success');
+        } else {
+          console.log('Response::', response);
+          throw new HttpErrorResponse({
+            error: response.message, // Custom error message
+            status: response.status, // Custom status code
+          });
         }
       }),
       catchError(this.errorService.handleError)
