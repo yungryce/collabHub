@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { LoginData } from '../user';
+import { LoginData } from '../../collabHub';
 import { AuthService } from '../auth.service';
 import { AlertService } from '../../alert.service';
 
@@ -39,11 +39,6 @@ export class LoginComponent {
   }
 
   login(): void {
-    if (this.loginForm.invalid) {
-      this.alertService.errorAlert('Please fill in all fields.');
-      return;
-    }
-
     const credentials: LoginData = this.loginForm.value;
 
     this.authService.login(credentials)
@@ -52,7 +47,7 @@ export class LoginComponent {
         this.router.navigate(['/profile']);
       },
       error: error => {
-        console.error('Registration error:', error);
+        console.error('Login error:', error);
       }
     });
   }

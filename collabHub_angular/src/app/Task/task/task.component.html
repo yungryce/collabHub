@@ -1,0 +1,102 @@
+<section class="container mx-auto flex flex-nowrap overflow-x-auto my-8">
+
+    <button class="px-6 py-2 bg-blue-500 text-white rounded-md mb-4 mr-4 hover:bg-blue-600"></button>
+
+    <!-- Task Card -->
+    <div class="flex flex-col max-w-md min-w-96 shadow-md rounded-md p-6 mb-4 mr-4 bg-gray-100" *ngIf="task">
+        <!-- Title -->
+        <!-- <h2 class="text-lg font-semibold mb-4 text-center">{{ task.title }}</h2> -->
+        <div class="flex justify-between items-center">
+            <h2 class="text-lg font-semibold mb-4 text-center">{{ task.title }}</h2>
+            <button (click)="editTask()" class="text-blue-500 hover:text-blue-600"><i class="fa-solid fa-pen-to-square"></i></button>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-4 h-3/4 overflow-auto flex flex-col  ">
+            <i class="fa-solid fa-thumbtack text-blue-500 mb-2"></i>
+            <p class="text-gray-700 text-justify justify-center">{{ task.description }}</p>
+        </div>
+        
+        <div class="flex justify-evenly">
+            <!-- Status -->
+            <div class="mb-4">
+                <h3 class="font-bold text-sm">Status</h3>
+                <p class="text-gray-700">{{ task.status }}</p>
+            </div>
+            
+            <!-- Created By -->
+            <div class="mb-4">
+                <h3 class="font-bold text-sm">Host</h3>
+                <p class="text-gray-700">{{ task.created_by }}</p>
+            </div>
+        </div>
+
+        <!-- Collabs -->
+        <!-- <div class="mb-4">
+            <p class="text-gray-700">Host: {{ task.collabs }}</p>
+        </div> -->
+
+    </div>
+
+    <!-- Attachments -->
+    <ng-container id="card-container" *ngFor="let attachment of attachments">
+        <div class="max-w-md min-w-64 bg-gray-100 shadow-md rounded-md p-6 mb-4 mr-4">
+            <div class="flex justify-between items-center">
+                <i class="fa-solid fa-thumbtack text-blue-500 mb-2 p-4"></i>
+                <div class="flex">
+                    <button (click)="editAttachment(attachment)" class="text-blue-500 hover:text-blue-600 mr-2"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button (click)="deleteAttachment(attachment.id)" class="text-red-500 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="mb-4">
+                <p class="text-gray-700">File: {{ attachment.file }}</p>
+            </div>
+            <div class="mb-4">
+                <p class="text-gray-700">Link: {{ attachment.link }}</p>
+            </div>
+            <div class="mb-4">
+                <p class="text-gray-700">Tag: {{ attachment.tag }}</p>
+            </div>
+            <div class="mb-4">
+                <p class="text-gray-700">Description: {{ attachment.info }}</p>
+            </div>
+        </div>
+    </ng-container>
+
+
+    <!-- Individual Card -->
+    <div class="max-w-md mx-auto shadow-md rounded-md p-6 mb-4 mr-4 bg-gray-100">
+        <!-- Title -->
+        <h2 class="text-lg font-semibold mb-4">Task Whiteboard</h2>
+        <!-- Form -->
+        <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+            <!-- Text Input -->
+            <textarea formControlName="info" class="w-full border rounded-md px-3 py-2 mb-4" placeholder="Write your task description here..."></textarea>
+        
+            <!-- File Upload -->
+            <label class="block mb-2">
+                <span class="text-gray-700">Upload File:</span>
+                <input type="file" formControlName="file" class="mt-1">
+            </label>
+        
+            <!-- Link Input -->
+            <div class="flex items-center mb-4">
+                <span class="text-gray-700 mr-2">Attach Link:</span>
+                <input type="text" formControlName="link" class="w-full border rounded-md px-3 py-2" placeholder="Paste link here...">
+            </div>
+    
+            <!-- Tag Input -->
+            <div class="flex items-center mb-4">
+                <span class="text-gray-700 mr-2">Tag:</span>
+                <input type="text" formControlName="tag" class="w-full border rounded-md px-3 py-2" placeholder="Enter tag...">
+            </div>
+        
+            <!-- Buttons -->
+            <div class="flex justify-end">
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md mr-2 hover:bg-blue-600">Save</button>
+                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400" (click)="taskForm.reset()">Cancel</button>
+            </div>
+        </form>
+    </div>
+    
+</section>

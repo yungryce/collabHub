@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { AuthService } from '../Auth/auth.service';
@@ -10,6 +10,7 @@ import { AuthService } from '../Auth/auth.service';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -19,13 +20,17 @@ export class DashboardComponent {
   constructor(private authService: AuthService, private router:Router) { }
 
   ngOnInit() {
-    this.authService.isLoggedIn()
+    this.authService.isLoggedInObservable()
       .subscribe(isLoggedIn => {
         this.isLoggedIn = isLoggedIn;
       });
   }
 
   logout(): void {
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+    }
+
     this.authService.logout()
       .subscribe({
         next: () => {

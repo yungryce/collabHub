@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
-import { UserData, ApiResponse } from '../user';
+import { UserData, ApiResponse } from '../../collabHub';
 import { AuthService } from '../auth.service';
 
 

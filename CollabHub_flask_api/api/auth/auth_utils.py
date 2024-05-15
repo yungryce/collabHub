@@ -3,6 +3,7 @@ from functools import wraps
 from flask import request, jsonify
 from models.users import UserModel, UserRole
 from models.tasks import TaskModel
+from api.response_utils import validate_json, response_info
 from models.blacklist import BlacklistToken
 
 
@@ -13,10 +14,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 def authenticate(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        data = request.get_json()
-        print('------------------------------------')
-        print(data)
-        print('------------------------------------')
         if "Authorization" in request.headers:
             token = request.headers["Authorization"].split(" ")[1]
             if BlacklistToken.check_blacklist(token):
@@ -79,21 +76,22 @@ def authorize(func):
         
         # Flag to indicate if any assigned user has a role hierarchy greater than the current user
         unauthorized = False
-
+        
         # If the user is assigned to the task, check their role against the task's assigned users
         for assigned_user in task.users:
+            print(user.role, assigned_user.role, UserRole.compare_roles(user.role, assigned_user.role), UserRole.compare_roles(user.role, assigned_user.role) < 0)
             if UserRole.compare_roles(user.role, assigned_user.role) < 0:
                 unauthorized = True
                 break
         
         if unauthorized:
-            return jsonify({'error': 'You are not authorized to perform this action'}), 403
+            return jsonify(response_info(403, error='You are not authorized to perform this action, as it involves users with higher role hierarchy', message='Unauthorized'))
         else:
             # Check if the current user is the creator of the task
-            if task.creator_id == user.id:
+            if task.created_by == user.id:
                 return func(*args, **kwargs)
             else:
-                return jsonify({'error': 'Only the user who created the task can perform this action'}), 403
+                return jsonify(response_info(403, error='Only the user who created the task can perform this action', message='Unauthorized'))
 
     return wrapper
 

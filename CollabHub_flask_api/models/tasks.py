@@ -2,9 +2,12 @@
 # models/task.py
 from enum import Enum
 from .base_model import BaseModel
-from sqlalchemy import Column, String, Table, ForeignKey
+from .attachments import AttachmentModel
+from sqlalchemy import Column, String, Table, ForeignKey, DateTime
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
+from datetime import datetime
+from database import db
 
 
 class TaskStatus(Enum):
@@ -36,24 +39,34 @@ class TaskModel(BaseModel):
     description = Column(String(255), nullable=True)
     status = Column(SQLAlchemyEnum(TaskStatus), default=TaskStatus.PAUSE, nullable=False)
     created_by = Column(String(36), ForeignKey('users.id'))
-    # Define relationship with users
+    start = Column(DateTime, nullable=True)
+    end = Column(DateTime, nullable=True)
+
+    # Define relationship with users and attachments
     users = relationship("UserModel", 
                     secondary=task_user_association, 
                     back_populates="tasks",
                     cascade="save-update, merge, delete")
+    attachments = relationship("AttachmentModel", backref="tasks", cascade="all, delete, delete-orphan")
 
-    def __init__(self, title=None, description=None, status=TaskStatus.PAUSE, created_by=None):
+
+    def __init__(self, title=None, description=None, status=TaskStatus.PAUSE, created_by=None, start=None, end=None):
         """
         Initialize a new Task instance.
 
         :param title: The title of the task
         :param description: The description of the task
-        :param done: Whether the task is done or not
+        :param status: The status of the task
+        :param created_by: The ID of the user who created the task
+        :param start: The start time of the task
+        :param end: The end time of the task
         """
         self.title = title
         self.description = description
         self.status = status
         self.created_by = created_by
+        self.start = start
+        self.end = end
 
     def __repr__(self):
         """
@@ -61,7 +74,7 @@ class TaskModel(BaseModel):
 
         :return: String representation of the Task instance
         """
-        return f'<Task title={self.title!r}, description={self.description!r}, done={self.done}>'
+        return f'<Task title={self.title!r}, description={self.description!r}, status={self.status!r}>'
     
     def to_json(self):
         """
@@ -72,11 +85,27 @@ class TaskModel(BaseModel):
         user_ids = [user.id for user in self.users]
         return {
             'id': self.id,
+            'created_by': self.created_by,
+            'user_ids': user_ids,
             'title': self.title,
             'description': self.description,
             'status': self.status.value, # 'start', 'pause', 'in-progress', 'done', 'close
+            'start': self.start.isoformat() if self.start else None,
+            'end': self.end.isoformat() if self.end else None,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat(),
-            'user_ids': user_ids
         }
+        
+    @staticmethod
+    def get_tasks_for_user_by_status(user, status):
+        """
+        Get tasks for a given user filtered by status.
 
+        :param user: The user for whom to retrieve tasks
+        :param status: The status of the tasks to retrieve
+        :return: A list of tasks for the user with the specified status
+        """
+        return db.session.query(TaskModel).join(task_user_association).filter(
+            task_user_association.c.user_id == user.id,
+            TaskModel.status == status
+        ).all()
