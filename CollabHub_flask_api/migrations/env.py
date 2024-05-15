@@ -10,10 +10,12 @@ from sqlalchemy import engine_from_config, pool
 # Import your models here
 from models.tasks import TaskModel
 from models.users import UserModel
+from models.attachments import AttachmentModel
 
 # Set the metadata to include all models
 metadata = TaskModel.metadata
 metadata = UserModel.metadata
+metadata = AttachmentModel.metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -2,6 +2,7 @@
 # models/task.py
 from enum import Enum
 from .base_model import BaseModel
+from .attachments import AttachmentModel
 from sqlalchemy import Column, String, Table, ForeignKey, DateTime
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
@@ -41,11 +42,13 @@ class TaskModel(BaseModel):
     start = Column(DateTime, nullable=True)
     end = Column(DateTime, nullable=True)
 
-    # Define relationship with users
+    # Define relationship with users and attachments
     users = relationship("UserModel", 
                     secondary=task_user_association, 
                     back_populates="tasks",
                     cascade="save-update, merge, delete")
+    attachments = relationship("AttachmentModel", backref="tasks", cascade="all, delete, delete-orphan")
+
 
     def __init__(self, title=None, description=None, status=TaskStatus.PAUSE, created_by=None, start=None, end=None):
         """

@@ -125,7 +125,6 @@ def create_task():
             assigned_user.tasks.append(new_task)
 
     new_task.save()
-
     return jsonify(response_info(201, message='Successful', data=new_task.to_json()))
 
 

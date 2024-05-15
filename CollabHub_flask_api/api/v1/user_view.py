@@ -48,7 +48,7 @@ def check_user_exists():
         if user:
             return jsonify(response_info(200, message='Successful', data=user.id))
         else:
-            return jsonify(response_info(404, message='Error', error='User not found'))
+            return jsonify(response_info(404, message='Error', error=f'User {identifier} not found'))
     except Exception as e:
         return jsonify(response_info(500, message='Error', error='Failed to check if user exists'))
 
