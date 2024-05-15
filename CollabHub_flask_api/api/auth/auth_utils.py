@@ -88,7 +88,7 @@ def authorize(func):
             return jsonify(response_info(403, error='You are not authorized to perform this action, as it involves users with higher role hierarchy', message='Unauthorized'))
         else:
             # Check if the current user is the creator of the task
-            if task.created_id == user.id:
+            if task.created_by == user.id:
                 return func(*args, **kwargs)
             else:
                 return jsonify(response_info(403, error='Only the user who created the task can perform this action', message='Unauthorized'))
