@@ -1,4 +1,6 @@
 # CollabHub
+![collabHub](./collabHub_angular/src/assets/collabHub.png)
+
 
 ## Introduction
 
@@ -96,4 +98,5 @@ Task Manager Pro
 Team Task Tracker
 
 ### Licensing
-Distributed under the MIT License. See LICENSE for more information.
+Distributed under GNU GENERAL PUBLIC LICENSE. See [LICENSE](./LICENSE.txt)
+for more information.
