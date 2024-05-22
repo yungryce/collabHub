@@ -13,6 +13,8 @@ import { ErrorService } from '../error.service';
   providedIn: 'root'
 })
 export class AuthService {
+  // private apiUrl = 'https://collabhub.me/api/auth';
+  // private userUrl = 'https://collabhub.me/api/v1/users';
   private apiUrl = 'http://localhost:5000/api/auth';
   private userUrl = 'http://localhost:5000/api/v1/users';
   private tokenKey = 'authToken';
