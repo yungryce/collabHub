@@ -7,16 +7,19 @@ import { tap, map, catchError } from 'rxjs/operators';
 import { ApiResponse, AuthResponse, LoginData, RegistrationData, UserData, ResponseInfo } from '../collabHub';
 import { AlertService } from '../alert.service';
 import { ErrorService } from '../error.service';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = `${environment.baseUrl}api/auth`;
+  private userUrl = `${environment.baseUrl}api/v1/users`;
   // private apiUrl = 'https://collabhub.me/api/auth';
   // private userUrl = 'https://collabhub.me/api/v1/users';
-  private apiUrl = 'http://localhost:5000/api/auth';
-  private userUrl = 'http://localhost:5000/api/v1/users';
+  // private apiUrl = 'http://localhost:5000/api/auth';
+  // private userUrl = 'http://localhost:5000/api/v1/users';
   private tokenKey = 'authToken';
 
   // private authenticationStatusSubject = new Subject<boolean>();

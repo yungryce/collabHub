@@ -7,16 +7,15 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { TaskModel, ResponseInfo, TaskAttachment } from '../collabHub';
 import { ErrorService } from '../error.service';
 import { AlertService } from '../alert.service';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
-  // private userUrl = 'https://collabhub.me/api/v1/users';
-  // private apiUrl = 'https://collabhub.me/api/v1/tasks';
-  private apiUrl = 'http://localhost:5000/api/v1/tasks';
-  private userUrl = 'http://localhost:5000/api/v1/users';
+  private userUrl = `${environment.baseUrl}api/v1/users`;
+  private apiUrl = `${environment.baseUrl}api/v1/tasks`;
 
   constructor(
     private router: Router,

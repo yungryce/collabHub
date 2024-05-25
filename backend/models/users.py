@@ -93,17 +93,13 @@ class UserModel(BaseModel):
 
         :return: Dictionary representation of the User instance
         """
-        try:
-            return {
-                'id': self.id,
-                'username': self.username,
-                'first_name': self.first_name,
-                'last_name': self.last_name,
-                'email': self.email
-            }
-        except Exception as e:
-            print(f"Error in to_json(): {e}")
-            return None
+        return {
+            'id': self.id,
+            'username': self.username,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email
+        }
 
     @property
     def password(self):

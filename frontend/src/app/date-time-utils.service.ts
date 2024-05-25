@@ -19,7 +19,7 @@ export class DateTimeUtilsService {
   }
 
   formatDateForInput(date: Date): string {
-    return format(date, 'ng yyyy-MM-dd HH:mm:ss');
+    return format(date, 'yyyy-MM-dd HH:mm:ss');
   }
 }
 

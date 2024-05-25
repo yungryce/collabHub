@@ -104,7 +104,6 @@ def create_task():
 
     # Parse input data after validation
     data = request.get_json()
-    print(data)
     title = data['title']
     description = data['description']
     start = data['start']
@@ -115,7 +114,6 @@ def create_task():
     created_by = user.id
     
     new_task = TaskModel(title=title, description=description, start=start, end=end, created_by=created_by)
-    print(new_task)
     # Associate the task with the current user    
     user.tasks.append(new_task)
     

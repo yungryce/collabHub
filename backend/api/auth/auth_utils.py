@@ -79,7 +79,6 @@ def authorize(func):
         
         # If the user is assigned to the task, check their role against the task's assigned users
         for assigned_user in task.users:
-            print(user.role, assigned_user.role, UserRole.compare_roles(user.role, assigned_user.role), UserRole.compare_roles(user.role, assigned_user.role) < 0)
             if UserRole.compare_roles(user.role, assigned_user.role) < 0:
                 unauthorized = True
                 break
