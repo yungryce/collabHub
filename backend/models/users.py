@@ -2,7 +2,7 @@
 # models/user.py
 
 from .base_model import BaseModel
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Boolean
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
 from enum import Enum
@@ -51,6 +51,8 @@ class UserModel(BaseModel):
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     _password = Column('password', String(128), nullable=False)
+    verification_token = Column(String(255), unique=True)
+    is_verified = Column(Boolean, default=False)
     role = Column(SQLAlchemyEnum(UserRole), default=UserRole.USER, nullable=False)
     
     # Define relationship with tasks

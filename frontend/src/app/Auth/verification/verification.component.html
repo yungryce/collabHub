@@ -1,0 +1,14 @@
+<!-- verification.component.html -->
+  
+<div class="container mx-auto flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-md my-4">
+    <h2 class="text-2xl font-bold mb-4 text-center">Registration Verification</h2>
+    <form (ngSubmit)="submitVerification()" class="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div class="mb-4">
+        <label for="verificationCode" class="block text-gray-700 text-sm font-bold mb-2">Verification Code:</label>
+        <input type="text" id="verificationCode" [(ngModel)]="verificationCode" name="verificationCode" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+    </form>
+  </div>
+</div>

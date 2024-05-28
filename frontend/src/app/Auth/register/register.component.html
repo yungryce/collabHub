@@ -2,6 +2,16 @@
   <div class="w-full max-w-md my-4">
     <h2 class="text-2xl font-bold mb-4 text-center">Register</h2>
     <form [formGroup]="registerForm" (ngSubmit)="register()" class="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="text-red-500 text-sm mt-2">
+        <svg class="animate-spin h-5 w-5 mr-3 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.373A8 8 0 0012 20v4c-6.627 0-12-5.373-12-12h4zm12 2.627A8 8 0 0020 12h4c0 6.627-5.373 12-12 12v-4z"></path>
+        </svg>
+        Loading...
+      </div>
+
       <div class="mb-4">
         <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
         <input type="text" id="username" formControlName="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -40,7 +50,16 @@
         <input type="text" id="lastName" formControlName="last_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
         <div *ngIf="registerForm.get('last_name')?.invalid && registerForm.get('last_name')?.touched" class="text-red-500 text-xs font-semibold italic">Last name is required.</div>
       </div>
+
+      <div class="mb-4">
+        <re-captcha 
+          (resolved)="handleRecaptcha($event)" 
+          siteKey="YOUR_SITE_KEY">
+        </re-captcha>
+      </div>
+
       <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" [disabled]="registerForm.invalid || registerForm.hasError('mismatch')">Register</button>
+
     </form>
   </div>
 </div>

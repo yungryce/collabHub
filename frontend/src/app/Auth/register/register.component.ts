@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 import { RegistrationData } from '../../collabHub';
 import { AuthService } from '../auth.service';
@@ -13,15 +14,20 @@ import { AlertService } from '../../alert.service';
   standalone: true,
   imports: [
     CommonModule,
-    // FormsModule,
+
     RouterModule,
     ReactiveFormsModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
+    RecaptchaV3Module,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
   registerForm!: FormGroup;
+  loading = false;
+  recaptchaResponse: string | null = null;
 
   constructor(
     private authService: AuthService,
@@ -42,6 +48,7 @@ export class RegisterComponent {
       confirmPassword: ['', Validators.required],
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
+      recaptcha: ['', Validators.required]
     }, { validators: this.passwordMatcher });
   }
 
@@ -51,16 +58,27 @@ export class RegisterComponent {
     return password && confirmPassword && password.value !== confirmPassword.value ? { mismatch: true } : null;
   }
 
+  handleRecaptcha(response: string): void {
+    this.recaptchaResponse = response;
+  }
+
   register(): void {
+    if (this.registerForm.invalid) {
+      return;
+    }
+
     const userData: RegistrationData = this.registerForm.value;
+    this.loading = true;
 
     this.authService.register(userData)
     .subscribe({
       next: () => {
-        this.router.navigate(['/login']);
+        this.loading = false;
+        this.router.navigate(['/verification']);
       },
       error: error => {
         console.error('Registration error:', error);
+        this.loading = false;
       }
     });
   }

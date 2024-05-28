@@ -4,7 +4,7 @@
 from datetime import datetime
 from sqlalchemy import Column, DateTime, String
 import uuid
-from database import db
+from config.database import db
 
 class BaseModel(db.Model):
     """Base model for other models."""

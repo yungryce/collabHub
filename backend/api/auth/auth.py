@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from models.users import UserModel
 from models.blacklist import BlacklistToken
 from api.response_utils import validate_json, response_info
@@ -8,9 +8,6 @@ from datetime import datetime, timedelta
 
 
 auth_views = Blueprint("auth_views", __name__, url_prefix="/api/auth")
-
-# Get the secret key from the environment variables
-SECRET_KEY = os.getenv('SECRET_KEY')
 
 @auth_views.route('/user', methods=['GET'])
 @authenticate
@@ -90,8 +87,15 @@ def register():
         last_name=data['last_name']
     )
     
+    # Get the IP address of the request
+    ip_address = request.remote_addr
+    
     # Save the new user to the database
     try:
+        mail_service = current_app.mail_service
+        token = mail_service.generate_verification_token()
+        mail_service.send_signup_verification(email, token, ip_address)
+        new_user.verification_token = token
         new_user.save()
         return jsonify(response_info(201, message='Successful'))
     except Exception as e:
@@ -120,7 +124,8 @@ def login():
                 'iat': datetime.utcnow(),
                 'sub': user.id
             }
-            token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+            secret_key = current_app.config['SECRET_KEY']
+            token = jwt.encode(payload, secret_key, algorithm='HS256')
         except Exception as e:
             error_message = 'Failed to generate Token: {}'.format(str(e))  # Construct error message
             return jsonify(response_info(500, message='Error', error=error_message))
@@ -158,3 +163,36 @@ def logout():
     except Exception as e:
         error_message = 'Failed to logout: {}'.format(str(e))
         return jsonify(response_info(500, message='Error', error=error_message))
+
+
+@auth_views.route('/verify-registration', methods=['POST'])
+def verify_registration():
+    """
+    Verify user registration using a verification token.
+
+    Returns:
+        JSON response indicating success or failure of verification
+    """
+    # Extract token from the request data
+    token = request.json.get('token')
+
+    # Check if token is provided
+    if not token:
+        return jsonify(response_info(400, message='Error', error='Verification token is required'))
+
+    # Retrieve the user associated with the token
+    user = UserModel.query.filter_by(verification_token=token).first()
+
+    # Check if user exists
+    if not user:
+        return jsonify(response_info(404, message='Error', error='Invalid verification token'))
+
+    # Check if the user is already verified
+    if user.is_verified:
+        return jsonify(response_info(200, message='User already verified'))
+
+    # Mark the user as verified and save to the database
+    user.is_verified = True
+    user.save()
+
+    return jsonify(response_info(200, message='Successful'))

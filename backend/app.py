@@ -1,38 +1,43 @@
 #!/usr/bin/python3
 import os
 import logging
+
 from flask import Flask, jsonify, request
-from api.v1 import task_views, user_views
-from api.auth.auth import auth_views
-from database import db, init_db
+from flask_mail import Mail
+from flask_cors import CORS
 from flask_migrate import Migrate
+
+from config.database import db, init_db
+from config.config import setup_logging
+from config.mail_service import MailService
+from config.error_handlers import register_error_handlers
+from api.auth.auth import auth_views
+from api.v1 import task_views, user_views
+
 from factories.users import generateusers, deleteallusers
 from factories.tasks import generatetasks, deletealltasks
-from flask_cors import CORS
 
-# Load environment variables from .env file
-# from dotenv import load_dotenv
-# load_dotenv()
-
-# Determine the environment
-env = os.getenv('FLASK_ENV', 'development')
 
 # Start the Flask app
 app = Flask(__name__)
 
 # Load configuration based on the environment
+env = os.getenv('FLASK_ENV', 'development')
 if env == 'production':
-    app.config.from_object('config.production.ProductionConfig')
+    app.config.from_object('config.config.ProductionConfig')
 else:
-    app.config.from_object('config.development.DevelopmentConfig')
+    app.config.from_object('config.config.DevelopmentConfig')
 
 # Set up logging
-log_format = '%(asctime)s - %(levelname)s - %(message)s'
-logging.basicConfig(filename='app.log', level=app.config['LOG_LEVEL'], format=log_format)
-app.logger.setLevel(app.config['LOG_LEVEL'])
+setup_logging(app)
 
-# Log the current environment
-app.logger.info('Logging set up for %s environment', env)
+# Register error handlers
+register_error_handlers(app)
+
+# Initialize Flask-Mail and MailService
+mail = Mail(app)
+mail_service = MailService(mail)
+app.mail_service = mail_service
 
 # Enable CORS for all routes
 CORS(app)
@@ -60,29 +65,6 @@ def log_request_info():
 @app.after_request
 def log_response_info(response):
     app.logger.debug('Response: %s %s', response.status, response.get_data(as_text=True))
-    return response
-
-@app.errorhandler(404)
-def not_found(error):
-    """Error handler for 404 Not Found."""
-    app.logger.error('Resource not found: %s', request.url)
-    return jsonify({'error': 'Resource not found'}), 404
-
-@app.errorhandler(500)
-def internal_server_error(error):
-    """Error handler for 500 Internal Server Error."""
-    app.logger.error('Internal server error: %s', error)
-    return jsonify({'error': 'Internal server error'}), 500
-
-@app.errorhandler(Exception)
-def handle_unexpected_error(error):
-    """General error handler."""
-    status_code = 500
-    if hasattr(error, 'code') and 500 <= error.code < 600:
-        status_code = error.code
-    response = jsonify({'error': 'An unexpected error occurred'})
-    response.status_code = status_code
-    app.logger.error('Internal server error: %s', error)
     return response
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@
 from .base_model import BaseModel
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
-from database import db
+from config.database import db
 
 
 class AttachmentModel(BaseModel):

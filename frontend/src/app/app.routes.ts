@@ -15,12 +15,14 @@ import { HomeComponent } from './home/home.component';
 
 import { authGuard } from './Auth/auth.guard';
 import { CalendarComponent } from './calendar/calendar.component';
+import { VerificationComponent } from './Auth/verification/verification.component';
 
 
 export const routes: Routes = [
     { path: '', component: HomeComponent, title: 'Hero' },
     { path: 'register', component: RegisterComponent, title: 'join' },
     { path: 'login', component: LoginComponent, title: 'login' },
+    { path: 'verification', component: VerificationComponent, title: 'verification' },
     { path: 'profile', component: ProfileComponent, title: 'profile', canActivate: [authGuard],},
     { path: 'task/:taskId', component: TaskComponent, title:'task' , canActivate: [authGuard],},
     { 

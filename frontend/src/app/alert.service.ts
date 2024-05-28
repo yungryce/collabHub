@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 
@@ -8,9 +6,6 @@ import Swal, { SweetAlertIcon } from 'sweetalert2';
   providedIn: 'root'
 })
 export class AlertService {
-
-  constructor(private router: Router) { }
-
   showAlert(text: string, icon: SweetAlertIcon, title: string): Promise<any> {
     return Swal.fire({
       icon,

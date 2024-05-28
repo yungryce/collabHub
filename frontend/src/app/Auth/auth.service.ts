@@ -16,10 +16,6 @@ import { environment } from '../../environments/environment';
 export class AuthService {
   private apiUrl = `${environment.baseUrl}api/auth`;
   private userUrl = `${environment.baseUrl}api/v1/users`;
-  // private apiUrl = 'https://collabhub.me/api/auth';
-  // private userUrl = 'https://collabhub.me/api/v1/users';
-  // private apiUrl = 'http://localhost:5000/api/auth';
-  // private userUrl = 'http://localhost:5000/api/v1/users';
   private tokenKey = 'authToken';
 
   // private authenticationStatusSubject = new Subject<boolean>();
@@ -70,8 +66,11 @@ export class AuthService {
     return this.http.post<ResponseInfo>(url, userData).pipe(
       tap(response => {
         if (response.status === 201 && response.message === 'Successful') {
-          console.log('Registration successful:', response);
           this.alertService.showAlert('Registration successful.', 'success', 'Success');
+        } else if (response.status === 409 && response.message === 'Error') {
+          this.alertService.showAlert(response.error, 'error', 'Error');
+        } else {
+          this.alertService.showAlert('An error occurred. Please try again.', 'error', 'Error');
         }
       }),
       catchError(this.errorService.handleError)
@@ -125,6 +124,27 @@ export class AuthService {
     );
   }
 
+  verifyRegistration(token: string): Observable<ResponseInfo> {
+    const url = `${this.apiUrl}/verify-registration`;
+    return this.http.post<ResponseInfo>(url, { token }).pipe(
+      tap(response => {
+        if (response.status === 200) {
+          if (response.message === 'Successful') {
+            this.alertService.showAlert('Verification successful.', 'success', 'Success');
+          } else if (response.message === 'User already verified') {
+            this.alertService.showAlert('User already verified.', 'info', 'Info');
+          }
+          this.router.navigate(['/login']);
+        } else {
+          // Handle non-200 responses as errors
+          this.alertService.showAlert(response.error, 'error', 'Error');
+          // throw { error: response.error || 'Verification failed', message: response.message || 'Error' };
+        }
+      }),
+      catchError(this.errorService.handleError)
+    );
+  }
+  
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
