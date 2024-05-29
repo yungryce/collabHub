@@ -3,11 +3,9 @@ import 'zone.js';
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { CalendarMonthViewDay, CalendarEvent, CalendarEventAction, CalendarModule, CalendarView, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { Subject } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 // import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { TaskService } from '../Task/task.service';
-import { TaskModel } from '../collabHub';
 import Swal from 'sweetalert2';
 
 

@@ -52,10 +52,11 @@
       </div>
 
       <div class="mb-4">
-        <re-captcha 
-          (resolved)="handleRecaptcha($event)" 
-          siteKey="YOUR_SITE_KEY">
-        </re-captcha>
+        <re-captcha
+          (resolved)="handleRecaptcha($event)"
+          siteKey="6LePHespAAAAAKI5ObRy3ZrYOwkduztWzDhCYEwY"
+          formControlName="recaptcha"
+        ></re-captcha>
       </div>
 
       <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" [disabled]="registerForm.invalid || registerForm.hasError('mismatch')">Register</button>

@@ -15,11 +15,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
-    { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.siteKeyV3 },
+    { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.siteKey },
     {
-      provide: RECAPTCHA_SETTINGS,cc
+      provide: RECAPTCHA_SETTINGS,
       useValue: {
-        siteKey: environment.siteKeyV2,
+        siteKey: environment.siteKey,
       } as RecaptchaSettings,
     },
     provideHttpClient(

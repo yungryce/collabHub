@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+import { RecaptchaModule, RecaptchaFormsModule, RecaptchaV3Module } from 'ng-recaptcha';
+// import { ReCaptchaV3Service } from 'ng-recaptcha';
 
 import { RegistrationData } from '../../collabHub';
 import { AuthService } from '../auth.service';
@@ -14,12 +15,11 @@ import { AlertService } from '../../alert.service';
   standalone: true,
   imports: [
     CommonModule,
-
     RouterModule,
     ReactiveFormsModule,
     RecaptchaModule,
     RecaptchaFormsModule,
-    RecaptchaV3Module,
+    RecaptchaV3Module
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -33,7 +33,8 @@ export class RegisterComponent {
     private authService: AuthService,
     private fb: FormBuilder,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    // private recaptchaV3Service: ReCaptchaV3Service,
   ) { }
 
   ngOnInit(): void {
@@ -58,8 +59,9 @@ export class RegisterComponent {
     return password && confirmPassword && password.value !== confirmPassword.value ? { mismatch: true } : null;
   }
 
-  handleRecaptcha(response: string): void {
-    this.recaptchaResponse = response;
+  handleRecaptcha(captchaResponse: string | null): void {
+    this.recaptchaResponse = captchaResponse;
+    this.registerForm.get('recaptcha')?.setValue(captchaResponse || ''); // Set empty string if captchaResponse is null
   }
 
   register(): void {
