@@ -7,6 +7,8 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv('SECRET_KEY')
+    RECAPTCHA_SITE_KEY = os.getenv('RECAPTCHA_SITE_KEY')
+    RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY')
     MAIL_SERVER = 'smtp.sendgrid.net'
     MAIL_SECRET_KEY=os.getenv('SENDGRID_API_KEY')
     MAIL_PORT = 587

@@ -11,8 +11,10 @@ from config.database import db, init_db
 from config.config import setup_logging
 from config.mail_service import MailService
 from config.error_handlers import register_error_handlers
+
 from api.auth.auth import auth_views
 from api.v1 import task_views, user_views
+from api.v1 import recaptcha_views
 
 from factories.users import generateusers, deleteallusers
 from factories.tasks import generatetasks, deletealltasks
@@ -50,6 +52,7 @@ migrate = Migrate(app, db)
 app.register_blueprint(task_views)
 app.register_blueprint(auth_views)
 app.register_blueprint(user_views)
+app.register_blueprint(recaptcha_views)
 
 app.cli.add_command(generateusers)
 app.cli.add_command(deleteallusers)

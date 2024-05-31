@@ -30,6 +30,7 @@ class MailService:
         self.mail.send(msg)
         
     def send_signup_verification(self, recipient, token, ip_address):
+        print(f'recipient: {recipient}, token: {token}, ip_address: {ip_address}')
         subject = "CollabHub - Verify Your Email Address"
 
         # Plain text version

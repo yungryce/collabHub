@@ -70,7 +70,7 @@ def register():
         return error
     # Parse input data after validation
     data = request.get_json()
-    username=data['username'],
+    username=data['username']
     email=data['email']
     
     # Check if the username or email already exists
