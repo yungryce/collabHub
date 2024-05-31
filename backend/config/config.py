@@ -24,7 +24,7 @@ class DevelopmentConfig(Config):
     
 class ProductionConfig(Config):
     DEBUG = False
-    LOG_LEVEL = 'INFO'
+    LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
     
 
 def setup_logging(app):
