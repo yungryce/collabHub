@@ -30,12 +30,12 @@ def recaptcha_verify():
     # Parse recaptcha variables
     recaptcha_token = data.get('token')
     recaptcha_action = data.get('action')
-    recaptcha_key = current_app.config['RECAPTCHA_SITE_KEY']
+    recaptcha_site_key = current_app.config['RECAPTCHA_SITE_KEY']
     recaptcha_project_id = 'collabhub-v1'
     recaptcha_key_path = '/home/juk/collabhub.json'
     
     # Create reCAPTCHA assessment
-    assessment_response = create_assessment(recaptcha_project_id, recaptcha_key, recaptcha_token, recaptcha_action, recaptcha_key_path)
+    assessment_response = create_assessment(recaptcha_project_id, recaptcha_site_key, recaptcha_token, recaptcha_action, recaptcha_key_path)
     
     # Check if the reCAPTCHA score is acceptable for registration
     if assessment_response and assessment_response.risk_analysis.score < 0.5:

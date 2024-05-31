@@ -15,7 +15,7 @@ def get_recaptcha_client(key_path: str) -> recaptchaenterprise_v1.RecaptchaEnter
     return client
 
 def create_assessment(
-    project_id: str, recaptcha_key: str, token: str, recaptcha_action: str, key_path: str
+    project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str, key_path: str
 ) -> Assessment:
     """Create an assessment to analyze the risk of a UI action.
     Args:
@@ -30,7 +30,7 @@ def create_assessment(
 
     # Set the properties of the event to be tracked.
     event = recaptchaenterprise_v1.Event()
-    event.site_key = recaptcha_key
+    event.site_key = recaptcha_site_key
     event.token = token
 
     assessment = recaptchaenterprise_v1.Assessment()
