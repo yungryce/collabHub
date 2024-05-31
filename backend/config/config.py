@@ -9,6 +9,7 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
     RECAPTCHA_SITE_KEY = os.getenv('RECAPTCHA_SITE_KEY')
     RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY')
+    RECAPTCHA_KEY_PATH = os.getenv('RECAPTCHA_KEY_PATH')
     MAIL_SERVER = 'smtp.sendgrid.net'
     MAIL_SECRET_KEY=os.getenv('SENDGRID_API_KEY')
     MAIL_PORT = 587

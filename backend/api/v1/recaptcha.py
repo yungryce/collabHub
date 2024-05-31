@@ -32,7 +32,7 @@ def recaptcha_verify():
     recaptcha_action = data.get('action')
     recaptcha_site_key = current_app.config['RECAPTCHA_SITE_KEY']
     recaptcha_project_id = 'collabhub-v1'
-    recaptcha_key_path = '/home/juk/collabhub.json'
+    recaptcha_key_path = current_app.config['RECAPTCHA_KEY_PATH']
     
     # Create reCAPTCHA assessment
     assessment_response = create_assessment(recaptcha_project_id, recaptcha_site_key, recaptcha_token, recaptcha_action, recaptcha_key_path)
