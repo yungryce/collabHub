@@ -5,7 +5,7 @@ export interface RegistrationData {
   password: string;
   first_name: string;
   last_name: string;
-  recaptcha: string;
+  // recaptcha: string;
 }
 
 // Interface for user login data

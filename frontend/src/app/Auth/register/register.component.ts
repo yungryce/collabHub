@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { RecaptchaModule, RecaptchaFormsModule, RecaptchaV3Module } from 'ng-recaptcha';
-// import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { ReCaptchaV3Service, RecaptchaV3Module, } from 'ng-recaptcha';
+import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { RegistrationData } from '../../collabHub';
 import { AuthService } from '../auth.service';
 import { AlertService } from '../../alert.service';
+import { RecaptchaService } from '../../recaptcha.service';
 
 
 @Component({
@@ -17,8 +19,6 @@ import { AlertService } from '../../alert.service';
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    RecaptchaModule,
-    RecaptchaFormsModule,
     RecaptchaV3Module
   ],
   templateUrl: './register.component.html',
@@ -27,18 +27,22 @@ import { AlertService } from '../../alert.service';
 export class RegisterComponent {
   registerForm!: FormGroup;
   loading = false;
-  recaptchaResponse: string | null = null;
+  recaptchaSubscription: Subscription | null = null;
+  recaptchaToken: string | null = null;
+  recaptchaValid = false;
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
     private alertService: AlertService,
     private router: Router,
-    // private recaptchaV3Service: ReCaptchaV3Service,
+    private recaptchaV3Service: ReCaptchaV3Service,
+    private recaptchaService: RecaptchaService
   ) { }
 
   ngOnInit(): void {
     this.initForm();
+    this.executeRecaptcha();
   }
 
   initForm(): void {
@@ -49,8 +53,48 @@ export class RegisterComponent {
       confirmPassword: ['', Validators.required],
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
-      recaptcha: ['', Validators.required]
     }, { validators: this.passwordMatcher });
+  }
+
+  executeRecaptcha(): void {
+    this.loading = true;
+    this.recaptchaSubscription = this.recaptchaV3Service.execute('register').pipe(
+      switchMap(token => this.recaptchaService.verifyToken(token, 'register'))
+    ).subscribe({
+      next: (isValid: boolean) => {
+        this.recaptchaValid = isValid;
+        if (!isValid) {
+          this.alertService.showAlert('reCAPTCHA verification failed. Please reload the page and try again.', 'error', 'Error');
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.alertService.showAlert('reCAPTCHA verification failed. Please reload the page and try again.', 'error', 'Error');
+        this.loading = false;
+      }
+    });
+  }
+
+
+  register(): void {
+    if (this.registerForm.invalid || !this.recaptchaValid) {
+      return;
+    }
+
+    this.loading = true;
+    const userData: RegistrationData = this.registerForm.value;
+
+    this.authService.register(userData).subscribe({
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/verification']);
+      },
+      error: (error) => {
+        console.error('Registration error:', error);
+        this.loading = false;
+        this.router.navigate(['/register']);
+      }
+    });
   }
 
   passwordMatcher(form: FormGroup): { mismatch: boolean } | null {
@@ -59,30 +103,9 @@ export class RegisterComponent {
     return password && confirmPassword && password.value !== confirmPassword.value ? { mismatch: true } : null;
   }
 
-  handleRecaptcha(captchaResponse: string | null): void {
-    this.recaptchaResponse = captchaResponse;
-    this.registerForm.get('recaptcha')?.setValue(captchaResponse || ''); // Set empty string if captchaResponse is null
-  }
-
-  register(): void {
-    if (this.registerForm.invalid) {
-      return;
+  ngOnDestroy(): void {
+    if (this.recaptchaSubscription) {
+      this.recaptchaSubscription.unsubscribe();
     }
-
-    const userData: RegistrationData = this.registerForm.value;
-    this.loading = true;
-
-    this.authService.register(userData)
-    .subscribe({
-      next: () => {
-        this.loading = false;
-        this.router.navigate(['/verification']);
-      },
-      error: error => {
-        console.error('Registration error:', error);
-        this.loading = false;
-      }
-    });
   }
-
 }

@@ -69,6 +69,9 @@ export class AuthService {
           this.alertService.showAlert('Registration successful.', 'success', 'Success');
         } else if (response.status === 409 && response.message === 'Error') {
           this.alertService.showAlert(response.error, 'error', 'Error');
+          setTimeout(() => {
+            location.reload();
+          }, 5000);
         } else {
           this.alertService.showAlert('An error occurred. Please try again.', 'error', 'Error');
         }

@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Define the quality level you want to use
+QUALITY=70
+
+# Define the directory containing the images (default to current directory if not provided)
+DIRECTORY=${1:-.}
+
+# Create an output directory if it does not exist
+OUTPUT_DIR="$HOME/DEV/collabHub/frontend/src/assets"
+mkdir -p "$OUTPUT_DIR"
+
+# Function to compress images
+compress_image() {
+  local IMAGE=$1
+  local FILENAME=$(basename "$IMAGE")
+  local EXTENSION="${FILENAME##*.}"
+  local OUTPUT_FILE="$OUTPUT_DIR/$FILENAME"
+
+  # Use appropriate convert command based on file extension
+  if [ "$EXTENSION" == "jpg" ] || [ "$EXTENSION" == "jpeg" ]; then
+    magick "$IMAGE" -quality "$QUALITY" "$OUTPUT_FILE"
+  elif [ "$EXTENSION" == "png" ]; then
+    magick "$IMAGE" -quality "$QUALITY" "$OUTPUT_FILE"
+  fi
+
+  echo "Compressed $IMAGE to $OUTPUT_FILE with quality $QUALITY"
+}
+
+# Iterate over all JPEG and PNG files in the directory
+for IMAGE in "$DIRECTORY"/*.{jpg,jpeg,png}
+do
+  # Check if there are any matching files
+  if [ -e "$IMAGE" ]; then
+    compress_image "$IMAGE"
+  else
+    echo "No images found in $DIRECTORY"
+    exit 1
+  fi
+done
