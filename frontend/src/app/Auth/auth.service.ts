@@ -50,16 +50,35 @@ export class AuthService {
   
 
   // rename to signify active user
-  getUser(): Observable<ResponseInfo> {
+  getActiveUser(): Observable<ResponseInfo> {
     return this.http.get<ApiResponse<UserData>>(this.userUrl).pipe(
       tap(response => {
         if (response.status === 200 && response.data) {
           this.storeUserData(response.data);
         }
+        else {
+          throwError(() => new Error('User not found.'))
+        }
       }),
       catchError(this.errorService.handleError)
     );
   }
+
+  getUsername(userId: string): Observable<string> {
+    const url = `${this.userUrl}/${userId}/username`;
+  
+    return this.http.get<ResponseInfo>(url).pipe(
+      map((response: ResponseInfo) => {
+        if (response.status === 200 && response.data && typeof response.data === 'string') {
+          return response.data;
+        }
+        // Return a default value when the conditions are not met
+        return ''; // or return null;
+      }),
+      catchError(this.errorService.handleError)
+    );
+  }
+  
 
   register(userData: RegistrationData): Observable<ResponseInfo> {
     const url = `${this.apiUrl}/register`;

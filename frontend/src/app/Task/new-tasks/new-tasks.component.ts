@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { catchError, finalize, map } from 'rxjs/operators';
-import { of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import { forkJoin } from 'rxjs';
 
@@ -14,9 +14,7 @@ import { AlertService } from '../../alert.service';
 import { DateTimeUtilsService } from '../../date-time-utils.service';
 import { TaskUserUtilsService } from '../task-user-utils.service';
 
-/**
- * Component directive for creating new tasks.
- */
+
 @Component({
   selector: 'app-new-tasks',
   standalone: true,
@@ -27,18 +25,12 @@ import { TaskUserUtilsService } from '../task-user-utils.service';
   templateUrl: './new-tasks.component.html',
   styleUrl: './new-tasks.component.css'
 })
+
 export class NewTasksComponent {
   task: TaskModel | null = null;
   createTaskForm!: FormGroup;
   selectedTaskId: string | null = null;
 
-    /**
-   * Constructs the NewTasksComponent.
-   * @param taskService - The task service.
-   * @param fb - The form builder service.
-   * @param alertService - The alert service.
-   * @param dateTimeUtils - The date time utility service.
-   */
   constructor(
     private authService: AuthService,
     private taskService: TaskService,

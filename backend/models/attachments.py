@@ -37,6 +37,7 @@ class AttachmentModel(BaseModel):
     def to_json(self):
         """Return a JSON representation of the AttachmentModel."""
         return {
+            "id": self.id,
             "task_id": self.task_id,
             "file": self.file,
             "link": self.link,

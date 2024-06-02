@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,6 +7,8 @@ import { TaskModel, TaskAttachment } from '../../collabHub';
 import { TaskService } from '../task.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { TaskUserUtilsService } from '../task-user-utils.service';
+import { AuthService } from '../../Auth/auth.service';
 
 /**
  * Component directive for tasks attachments.
@@ -27,12 +29,16 @@ export class TaskComponent {
   attachments: TaskAttachment[] = []; // Initialize attachments as empty array
   currentAttachment: TaskAttachment | null = null; // Track the attachment being edited
   isEditMode: boolean = false; // Flag to track if we are in edit mode
+  creatorUsername: string = ''; // Initialize creator username as empty string
 
   constructor(
     private taskService: TaskService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private taskUserUtilsService: TaskUserUtilsService,
+    private authService: AuthService,
+    // private changeDetector: ChangeDetectorRef,
    ) { }
 
   initForm(): void {
@@ -59,6 +65,7 @@ export class TaskComponent {
       if (task) {
         this.task = task;
         this.populateForm();
+        this.displayCreator(task.created_by); // Display creator username
         // Fetch attachments after the task data is retrieved
         this.taskService.getTaskAttachments(taskId).subscribe((attachments: TaskAttachment[]) => {
           this.attachments = attachments;
@@ -67,7 +74,8 @@ export class TaskComponent {
     });
   }
 
-  editTask(): void {
+  editTask(task: TaskModel): void {
+    this.taskUserUtilsService.setSelectedTaskId(task.id);
     this.router.navigate(['/tasks/new']);
   }
 
@@ -95,7 +103,7 @@ export class TaskComponent {
   }
 
   onSubmit(): void {
-    if (!this.task) {
+    if (!this.task || this.taskForm.invalid) {
       console.error('No task available.');
       return;
     }
@@ -111,9 +119,9 @@ export class TaskComponent {
           if (response) {
             const index = this.attachments.findIndex(att => att.id === this.currentAttachment!.id);
             this.attachments[index] = response;
-            this.isEditMode = false;
-            this.currentAttachment = null;
-            this.taskForm.reset();
+            console.log(this.attachments[index])
+            this.resetForm();
+            // this.changeDetector.detectChanges();
           } else {
             console.error('No response received after updating attachment.');
           }
@@ -129,6 +137,7 @@ export class TaskComponent {
           if (response) {
             this.attachments.push(response);
             this.resetForm();
+            // this.changeDetector.detectChanges();
           } else {
             console.error('No response received after saving attachment.');
           }
@@ -141,18 +150,36 @@ export class TaskComponent {
   }
 
   deleteAttachment(attachmentId: string): void {
-    if (!this.task) {
+    if (!this.task || !attachmentId) {
       console.error('No task available.');
       return;
     }
+    console.log(attachmentId)
 
     const taskId = this.task.id;
     this.taskService.deleteAttachment(taskId, attachmentId).subscribe(
       () => {
+        console.log(taskId, attachmentId)
         this.attachments = this.attachments.filter(att => att.id !== attachmentId);
       },
       (error) => console.error('Error deleting attachment:', error)
     );
+  }
+
+  displayCreator(userId: string): void {
+    this.authService.getUsername(userId).subscribe(
+      (username: string) => {
+        console.log(username)
+        this.creatorUsername = username;
+      },
+      (error) => console.error('Error getting user:', error)
+    );
+  }
+
+  displayUsernames(task: TaskModel): string {
+    const usernames = this.taskUserUtilsService.getUsernamesForTask(task.id);
+    console.log(task)
+    return this.taskUserUtilsService.displayUsernames(usernames);
   }
 
   resetForm(): void {

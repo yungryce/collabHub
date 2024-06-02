@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { TaskService } from './task.service';
+import { AuthService } from '../Auth/auth.service';
 import { TaskModel } from '../collabHub';
 
 
@@ -14,7 +14,7 @@ export class TaskUserUtilsService {
   private selectedTaskIdSource = new BehaviorSubject<string | null>(null);
   selectedTaskId$ = this.selectedTaskIdSource.asObservable();
 
-  constructor(private taskService: TaskService) { }
+  constructor(private authService: AuthService) { }
 
   setSelectedTaskId(taskId: string): void {
     this.selectedTaskIdSource.next(taskId);
@@ -30,7 +30,7 @@ export class TaskUserUtilsService {
 
       task.user_ids.forEach(userId => {
         if (currentUserId) {
-          this.taskService.getUsername(userId).subscribe(
+          this.authService.getUsername(userId).subscribe(
             (username: string | null) => {
               if (username !== null) {
                 // Store usernames in the map

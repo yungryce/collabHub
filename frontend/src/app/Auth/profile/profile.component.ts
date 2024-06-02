@@ -27,7 +27,7 @@ export class ProfileComponent {
       this.userData = JSON.parse(cachedUserData);
     } else {
       // Fetch user data from the server
-      this.authService.getUser()
+      this.authService.getActiveUser()
       .subscribe();
     }
   }

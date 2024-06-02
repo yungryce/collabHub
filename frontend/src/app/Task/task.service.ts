@@ -157,35 +157,5 @@ export class TaskService {
     );
   }
 
-
-  getUsername(userId: string): Observable<string> {
-    const url = `${this.userUrl}/${userId}/username`;
-  
-    return this.http.get<ResponseInfo>(url).pipe(
-      map((response: ResponseInfo) => {
-        if (response.status === 200 && response.data && typeof response.data === 'string') {
-          return response.data;
-        }
-        // Return a default value when the conditions are not met
-        return ''; // or return null;
-      }),
-      catchError(this.errorService.handleError)
-    );
-  }
-  
-
-  // checkUserExists(userIdentifier: string): Observable<string | null> {
-  //   const url = `${this.userUrl}/exists?identifier=${userIdentifier}`;
-
-  //   return this.http.get<ResponseInfo>(url).pipe(
-  //     map((response: ResponseInfo) => {
-  //       if (response.status === 200 && response.message === 'Successful') {
-  //         return response.data; // Return the user ID
-  //       }
-  //     }),
-  //     catchError(this.errorService.handleError)
-  //   );
-  // }
-
 }
 
