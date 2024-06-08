@@ -62,12 +62,12 @@ app.cli.add_command(deletealltasks)
 # Log request information before each request
 @app.before_request
 def log_request_info():
-    app.logger.debug('Request: %s %s %s', request.method, request.url, request.data)
+    app.logger.info('Request: %s %s %s', request.method, request.url, request.data)
 
 # Log response information after each request
 @app.after_request
 def log_response_info(response):
-    app.logger.debug('Response: %s %s', response.status, response.get_data(as_text=True))
+    app.logger.info('Response: %s %s', response.status, response.get_data(as_text=True))
     return response
 
 if __name__ == '__main__':
