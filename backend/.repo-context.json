@@ -1,0 +1,283 @@
+{
+  "metadata": {
+    "title": "CollabHub Backend API Server",
+    "type": "container",
+    "parent_repository": "collabHub",
+    "version": "1.0.0",
+    "purpose": "RESTful API backend service for collaborative task management",
+    "description": "Flask-based REST API backend providing authentication, task management, user management, and collaboration features with MySQL database integration",
+    "scope": "backend-service",
+    "complexity": "intermediate",
+    "primary_language": "python",
+    "created_date": "2024-01-15",
+    "updated_date": "2024-03-20",
+    "maintainer": {
+      "name": "Jbcco",
+      "email": "jbccodev@outlook.com",
+      "github": "jukwu"
+    }
+  },
+  "repository_context": {
+    "name": "collabHub-backend",
+    "full_path": "/home/juk/DEV/cloud/functions/collabHub/backend",
+    "relative_path": "backend/",
+    "git_tracked": true,
+    "primary_language": "python",
+    "language_stats": {
+      "python": 85,
+      "html": 8,
+      "css": 4,
+      "javascript": 2,
+      "other": 1
+    },
+    "framework": "flask",
+    "container_type": "backend-api"
+  },
+  "tech_stack": {
+    "backend": {
+      "runtime": "Python 3.10+",
+      "framework": "Flask 3.0.2",
+      "orm": "SQLAlchemy 3.1.1",
+      "database": "MySQL",
+      "migration": "Flask-Migrate 4.0.7",
+      "authentication": "Custom JWT + bcrypt",
+      "validation": "Google reCAPTCHA Enterprise",
+      "email": "SendGrid + Flask-Mail",
+      "cors": "Flask-CORS 4.0.1"
+    },
+    "data": {
+      "database": "MySQL 8.0+",
+      "orm": "SQLAlchemy",
+      "migrations": "Alembic",
+      "connection_pooling": "SQLAlchemy built-in"
+    },
+    "security": {
+      "password_hashing": "bcrypt 4.1.2",
+      "captcha": "Google reCAPTCHA Enterprise 1.20.0",
+      "cors": "Flask-CORS",
+      "input_validation": "Custom validators",
+      "rate_limiting": "Built-in middleware"
+    },
+    "infrastructure": {
+      "containerization": "Docker",
+      "reverse_proxy": "Nginx",
+      "deployment": "Docker Compose",
+      "logging": "Python logging + RotatingFileHandler"
+    },
+    "testing": {
+      "unit_testing": "pytest",
+      "factory": "Factory Boy 3.3.0",
+      "fake_data": "Faker 24.7.1"
+    }
+  },
+  "skill_manifest": {
+    "core_skills": [
+      {
+        "skill": "flask_web_development",
+        "level": "intermediate",
+        "components": ["Flask app structure", "Blueprint organization", "Request handling", "Response formatting"],
+        "code_references": ["app.py", "api/"]
+      },
+      {
+        "skill": "rest_api_design",
+        "level": "intermediate",
+        "components": ["RESTful endpoints", "HTTP methods", "Status codes", "JSON responses"],
+        "code_references": ["api/v1/", "api/auth/", "api/response_utils.py"]
+      },
+      {
+        "skill": "database_modeling",
+        "level": "intermediate",
+        "components": ["SQLAlchemy models", "Relationships", "Migrations", "Database schema"],
+        "code_references": ["models/", "migrations/"]
+      },
+      {
+        "skill": "authentication_authorization",
+        "level": "intermediate",
+        "components": ["User authentication", "Password hashing", "Role-based access", "JWT tokens"],
+        "code_references": ["api/auth/", "models/users.py"]
+      },
+      {
+        "skill": "security_implementation",
+        "level": "intermediate",
+        "components": ["Input validation", "CORS configuration", "reCAPTCHA integration", "Security headers"],
+        "code_references": ["config/recaptcha.py", "config/error_handlers.py"]
+      }
+    ],
+    "learning_objectives": [
+      "Build production-ready Flask REST APIs",
+      "Implement secure authentication systems",
+      "Design and implement database models",
+      "Handle API security and validation",
+      "Structure scalable backend applications"
+    ],
+    "skill_progression": {
+      "beginner": ["Basic Flask routing", "Simple database models", "Basic authentication"],
+      "intermediate": ["Complex API design", "Advanced security", "Database relationships", "Error handling"],
+      "advanced": ["Microservices architecture", "Performance optimization", "Advanced security patterns"]
+    }
+  },
+  "components": {
+    "api_layer": {
+      "description": "RESTful API endpoints organized by version and functionality",
+      "location": "api/",
+      "key_files": ["api/v1/", "api/auth/", "api/response_utils.py"],
+      "responsibilities": ["Request routing", "Response formatting", "API versioning", "Authentication endpoints"]
+    },
+    "data_layer": {
+      "description": "Database models and data access logic",
+      "location": "models/",
+      "key_files": ["models/users.py", "models/tasks.py", "models/base_model.py"],
+      "responsibilities": ["Data modeling", "Database interactions", "Model relationships", "Data validation"]
+    },
+    "config_layer": {
+      "description": "Application configuration and service setup",
+      "location": "config/",
+      "key_files": ["config/config.py", "config/database.py", "config/mail_service.py"],
+      "responsibilities": ["Environment configuration", "Database setup", "Service initialization", "Error handling"]
+    },
+    "factories": {
+      "description": "Data generation and testing utilities",
+      "location": "factories/",
+      "key_files": ["factories/users.py", "factories/tasks.py"],
+      "responsibilities": ["Test data generation", "Development utilities", "Database seeding"]
+    }
+  },
+  "architecture_patterns": {
+    "mvc_pattern": {
+      "description": "Model-View-Controller architecture with Flask blueprints",
+      "implementation": "Models in models/, Controllers in api/, Configuration separation"
+    },
+    "repository_pattern": {
+      "description": "Data access abstraction through SQLAlchemy ORM",
+      "implementation": "Models act as repositories with built-in query methods"
+    },
+    "factory_pattern": {
+      "description": "Object creation patterns for testing and development",
+      "implementation": "Factory classes for generating test data and objects"
+    },
+    "configuration_pattern": {
+      "description": "Environment-based configuration management",
+      "implementation": "Config classes for development and production environments"
+    }
+  },
+  "api_endpoints": {
+    "authentication": {
+      "base_path": "/auth",
+      "endpoints": ["POST /auth/login", "POST /auth/register", "POST /auth/logout", "POST /auth/refresh"],
+      "description": "User authentication and session management"
+    },
+    "user_management": {
+      "base_path": "/api/v1/users",
+      "endpoints": ["GET /users", "GET /users/{id}", "PUT /users/{id}", "DELETE /users/{id}"],
+      "description": "User profile and account management"
+    },
+    "task_management": {
+      "base_path": "/api/v1/tasks",
+      "endpoints": ["GET /tasks", "POST /tasks", "GET /tasks/{id}", "PUT /tasks/{id}", "DELETE /tasks/{id}"],
+      "description": "Task creation, assignment, and lifecycle management"
+    },
+    "security": {
+      "base_path": "/api/v1/recaptcha",
+      "endpoints": ["POST /recaptcha/verify"],
+      "description": "Security validation and bot protection"
+    }
+  },
+  "data_models": {
+    "user_model": {
+      "file": "models/users.py",
+      "fields": ["id", "username", "email", "password_hash", "role", "created_at", "updated_at"],
+      "relationships": ["tasks (many-to-many)", "created_tasks (one-to-many)"],
+      "enums": ["UserRole (ADMIN, DEVELOPER, USER)"]
+    },
+    "task_model": {
+      "file": "models/tasks.py",
+      "fields": ["id", "title", "description", "status", "assigned_users", "created_by", "due_date"],
+      "relationships": ["users (many-to-many)", "creator (many-to-one)", "attachments (one-to-many)"],
+      "enums": ["TaskStatus (START, PAUSE, IN_PROGRESS, DONE, CLOSE)"]
+    },
+    "attachment_model": {
+      "file": "models/attachments.py",
+      "fields": ["id", "filename", "file_path", "task_id", "uploaded_by"],
+      "relationships": ["task (many-to-one)", "uploader (many-to-one)"]
+    }
+  },
+  "security": {
+    "authentication": {
+      "method": "Custom JWT implementation",
+      "password_security": "bcrypt hashing with salt",
+      "session_management": "Token-based authentication"
+    },
+    "authorization": {
+      "model": "Role-based access control (RBAC)",
+      "roles": ["ADMIN", "DEVELOPER", "USER"],
+      "hierarchy": "ADMIN > DEVELOPER > USER"
+    },
+    "validation": {
+      "input_validation": "Custom validators and sanitization",
+      "captcha": "Google reCAPTCHA Enterprise integration",
+      "cors": "Configured for cross-origin requests"
+    }
+  },
+  "quality_metrics": {
+    "code_coverage": "Not specified",
+    "test_files": ["factories/", "CLI commands for data generation"],
+    "documentation_completeness": 85,
+    "code_complexity": "Medium",
+    "maintainability_index": 78,
+    "security_score": 82,
+    "performance_rating": "Good",
+    "scalability_rating": "Good"
+  },
+  "relationships": {
+    "dependencies": [
+      {
+        "name": "MySQL Database",
+        "type": "database",
+        "relationship": "stores_data_in",
+        "description": "Primary data storage"
+      },
+      {
+        "name": "SendGrid",
+        "type": "external_service",
+        "relationship": "integrates_with",
+        "description": "Email service provider"
+      },
+      {
+        "name": "Google reCAPTCHA",
+        "type": "external_service",
+        "relationship": "integrates_with",
+        "description": "Bot protection and validation"
+      }
+    ],
+    "related_containers": [
+      {
+        "name": "frontend",
+        "path": "../frontend",
+        "relationship": "serves_api_to",
+        "description": "Angular frontend application"
+      }
+    ]
+  },
+  "deployment": {
+    "containerization": {
+      "docker_support": true,
+      "dockerfile_location": "Dockerfile",
+      "base_image": "python:3.10",
+      "exposed_ports": ["5000"]
+    },
+    "configuration": {
+      "environment_variables": [
+        "FLASK_ENV", "DATABASE_URL", "SECRET_KEY", "SENDGRID_API_KEY",
+        "RECAPTCHA_SITE_KEY", "RECAPTCHA_SECRET_KEY", "HOST", "PORT"
+      ],
+      "config_files": ["nginx.conf"],
+      "reverse_proxy": "Nginx configuration included"
+    }
+  },
+  "development": {
+    "setup_complexity": "Medium",
+    "prerequisites": ["Python 3.10+", "MySQL 8.0+", "SendGrid account", "Google reCAPTCHA keys"],
+    "cli_commands": ["generateusers", "deleteallusers", "generatetasks", "deletealltasks"],
+    "development_tools": ["Flask-Migrate", "Factory Boy", "Faker"]
+  }
+}

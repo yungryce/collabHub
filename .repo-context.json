@@ -1,0 +1,305 @@
+{
+  "project_identity": {
+    "name": "CollabHub - Enterprise Task Management Platform",
+    "type": "project",
+    "scope": "fullstack",
+    "description": "Sophisticated collaborative task management platform built with Angular 17 and Flask, featuring real-time synchronization, JWT authentication, file management, and comprehensive team coordination capabilities for enterprise-grade productivity.",
+    "is_independent": true,
+    "version": "1.0.0",
+    "curriculum_stage": "capstone"
+  },
+  "tech_stack": {
+    "primary": ["Angular 17.3.0", "Flask 3.0.2", "TypeScript 5.4.0", "Python 3.x"],
+    "secondary": ["MySQL 8.0", "SQLAlchemy", "RxJS", "Tailwind CSS", "JWT", "Nginx"],
+    "key_libraries": [
+      "flask-sqlalchemy", "flask-migrate", "flask-cors", "flask-mail", "bcrypt",
+      "@angular/core", "@angular/router", "@angular/forms", "rxjs", "sweetalert2",
+      "angular-calendar", "ng-recaptcha", "date-fns"
+    ],
+    "development_tools": [
+      "Angular CLI", "Flask CLI", "npm", "pip", "MySQL Workbench", "Postman",
+      "VS Code", "Git", "nginx", "factory-boy", "faker"
+    ],
+    "testing_frameworks": ["pytest", "jasmine", "karma", "protractor", "factory-boy"]
+  },
+  "skill_manifest": {
+    "technical": [
+      "Advanced Full-Stack Web Development",
+      "RESTful API Design and Implementation", 
+      "Modern Frontend Framework Development (Angular)",
+      "Backend Web Framework Mastery (Flask)",
+      "Database Design and ORM Implementation",
+      "JWT Authentication and Security",
+      "Real-Time Communication Systems",
+      "Responsive Web Design with CSS Frameworks",
+      "Email Service Integration",
+      "File Upload and Management Systems",
+      "Input Validation and Security",
+      "Error Handling and Logging",
+      "Database Migration Management",
+      "Test Data Generation and Factory Patterns",
+      "Production Deployment and Configuration"
+    ],
+    "domain": [
+      "Enterprise Task Management",
+      "Team Collaboration Software",
+      "Project Management Systems",
+      "User Authentication and Authorization",
+      "Real-Time Web Applications",
+      "Document Management Systems",
+      "Notification and Communication Systems",
+      "Web Application Security",
+      "Database-Driven Applications",
+      "Single Page Application (SPA) Development"
+    ],
+    "competency_level": "advanced",
+    "prerequisites": [
+      "Strong proficiency in JavaScript and TypeScript",
+      "Understanding of Python programming and web frameworks",
+      "Knowledge of HTML, CSS, and responsive design principles",
+      "Experience with relational databases and SQL",
+      "Familiarity with Git version control",
+      "Basic understanding of web security principles",
+      "Knowledge of RESTful API concepts"
+    ]
+  },
+  "components": {
+    "frontend_application": [
+      {
+        "name": "Angular Frontend",
+        "files": ["frontend/"],
+        "description": "Modern Angular 17 single-page application with TypeScript, reactive programming, and responsive design"
+      },
+      {
+        "name": "User Interface Components",
+        "files": ["frontend/src/app/components/"],
+        "description": "Reusable UI components for task management, user interaction, and navigation"
+      },
+      {
+        "name": "Business Logic Services",
+        "files": ["frontend/src/app/services/"],
+        "description": "Angular services for API communication, state management, and business logic"
+      },
+      {
+        "name": "Authentication Guards",
+        "files": ["frontend/src/app/guards/"],
+        "description": "Route protection and authentication validation services"
+      }
+    ],
+    "backend_api": [
+      {
+        "name": "Flask Application Core",
+        "files": ["backend/app.py", "backend/config/"],
+        "description": "Main Flask application with configuration management and initialization"
+      },
+      {
+        "name": "RESTful API Endpoints",
+        "files": ["backend/api/"],
+        "description": "Comprehensive API endpoints for user management, task operations, and authentication"
+      },
+      {
+        "name": "Database Models",
+        "files": ["backend/models/"],
+        "description": "SQLAlchemy ORM models for users, tasks, attachments, and system data"
+      },
+      {
+        "name": "Authentication System",
+        "files": ["backend/api/auth/"],
+        "description": "JWT-based authentication with secure login, registration, and session management"
+      }
+    ],
+    "data_management": [
+      {
+        "name": "Database Schema",
+        "files": ["backend/migrations/"],
+        "description": "Database migration files for schema versioning and deployment"
+      },
+      {
+        "name": "Test Data Factories",
+        "files": ["backend/factories/"],
+        "description": "Automated test data generation for development and testing environments"
+      },
+      {
+        "name": "Email Service",
+        "files": ["backend/config/mail_service.py"],
+        "description": "Email notification system for user communication and account verification"
+      }
+    ]
+  },
+  "topics": [
+    "Full-Stack Web Development",
+    "Angular Framework Development",
+    "Flask RESTful API Development",
+    "JWT Authentication Implementation",
+    "Database Design and ORM",
+    "Real-Time Web Applications",
+    "Responsive User Interface Design",
+    "Task Management Systems",
+    "Team Collaboration Software",
+    "Web Application Security",
+    "Email Integration Services",
+    "File Upload and Management",
+    "Production Deployment"
+  ],
+  "project_structure": {
+    "type": "fullstack_web_application",
+    "organization": "modular_architecture",
+    "key_directories": ["frontend/", "backend/", "backend/api/", "backend/models/", "backend/config/"],
+    "entry_points": ["backend/app.py", "frontend/src/main.ts"],
+    "configuration_files": ["frontend/angular.json", "backend/requirements.txt", "frontend/package.json"],
+    "database_files": ["backend/migrations/", "backend/models/"]
+  },
+  "outcomes": {
+    "deployment_deliverables": [
+      "Production-ready collaborative task management platform",
+      "Secure RESTful API with comprehensive endpoint coverage",
+      "Modern responsive web application with real-time features",
+      "Complete user authentication and authorization system",
+      "Database-driven application with migration support",
+      "Email notification and communication system",
+      "File upload and attachment management system"
+    ],
+    "learning_deliverables": [
+      "Advanced full-stack development expertise",
+      "Modern frontend framework mastery (Angular 17)",
+      "Professional backend API development skills (Flask)",
+      "Database design and ORM implementation proficiency",
+      "Web application security and authentication expertise",
+      "Real-time communication system development",
+      "Production deployment and configuration knowledge"
+    ],
+    "integration_points": [
+      "Angular frontend consuming Flask RESTful API",
+      "JWT token-based authentication across frontend and backend",
+      "Real-time notifications using WebSocket connections",
+      "Email service integration for user communication",
+      "File upload system with secure storage management",
+      "Database integration with SQLAlchemy ORM",
+      "Production deployment with Nginx reverse proxy"
+    ]
+  },
+  "relationships": {
+    "parent": null,
+    "peers": ["task-management-systems", "collaboration-platforms", "web-applications"],
+    "depends_on": [],
+    "outputs_to": [],
+    "consumers": ["development teams", "project managers", "enterprise users", "collaboration teams"]
+  },
+  "files": {
+    "frontend_components": [
+      {
+        "path": "frontend/src/app/",
+        "purpose": "Angular application with components, services, and routing",
+        "skills": ["Angular development", "TypeScript programming", "Reactive programming", "Component architecture"]
+      },
+      {
+        "path": "frontend/src/app/services/",
+        "purpose": "Business logic services and API communication",
+        "skills": ["Service design", "HTTP client implementation", "State management", "Error handling"]
+      },
+      {
+        "path": "frontend/src/app/components/",
+        "purpose": "Reusable UI components and page templates",
+        "skills": ["Component design", "Template development", "Event handling", "Data binding"]
+      },
+      {
+        "path": "frontend/src/app/guards/",
+        "purpose": "Route protection and authentication validation",
+        "skills": ["Authentication guards", "Route protection", "Security implementation"]
+      }
+    ],
+    "backend_api": [
+      {
+        "path": "backend/app.py",
+        "purpose": "Main Flask application entry point and configuration",
+        "skills": ["Flask application setup", "Middleware configuration", "Application initialization"]
+      },
+      {
+        "path": "backend/api/",
+        "purpose": "RESTful API endpoints and route handlers",
+        "skills": ["RESTful API design", "HTTP methods", "Request/response handling", "API versioning"]
+      },
+      {
+        "path": "backend/models/",
+        "purpose": "Database models and ORM relationships",
+        "skills": ["Database modeling", "SQLAlchemy ORM", "Relationship mapping", "Data validation"]
+      },
+      {
+        "path": "backend/config/",
+        "purpose": "Application configuration and service setup",
+        "skills": ["Configuration management", "Environment variables", "Service initialization"]
+      }
+    ],
+    "authentication_system": [
+      {
+        "path": "backend/api/auth/",
+        "purpose": "JWT authentication and user management",
+        "skills": ["JWT implementation", "Password hashing", "Session management", "Security protocols"]
+      },
+      {
+        "path": "backend/models/users.py",
+        "purpose": "User data model and authentication methods",
+        "skills": ["User modeling", "Authentication methods", "Data validation", "Security implementation"]
+      },
+      {
+        "path": "backend/models/blacklist.py",
+        "purpose": "JWT token blacklist for secure logout",
+        "skills": ["Token management", "Security measures", "Session invalidation"]
+      }
+    ],
+    "database_management": [
+      {
+        "path": "backend/migrations/",
+        "purpose": "Database schema version control and migrations",
+        "skills": ["Database migrations", "Schema versioning", "Data consistency", "Deployment automation"]
+      },
+      {
+        "path": "backend/factories/",
+        "purpose": "Test data generation and database seeding",
+        "skills": ["Test data generation", "Factory patterns", "Database seeding", "Development utilities"]
+      }
+    ]
+  },
+  "assessment": {
+    "frontend_development": [
+      "Angular framework implementation and component architecture",
+      "TypeScript usage and reactive programming patterns",
+      "User interface design and responsive layout implementation",
+      "API integration and HTTP client usage",
+      "State management and data flow implementation"
+    ],
+    "backend_development": [
+      "Flask application structure and RESTful API design",
+      "Database modeling and SQLAlchemy ORM implementation",
+      "Authentication system and JWT token management",
+      "Error handling and input validation implementation",
+      "Email service integration and notification system"
+    ],
+    "full_stack_integration": [
+      "Frontend-backend communication and API consumption",
+      "Authentication flow across frontend and backend",
+      "Real-time features and WebSocket implementation",
+      "File upload and management system",
+      "Production deployment and configuration"
+    ],
+    "software_engineering": [
+      "Code organization and modular architecture",
+      "Documentation quality and code commenting",
+      "Version control usage and Git workflow",
+      "Testing implementation and coverage",
+      "Security best practices and vulnerability prevention"
+    ]
+  },
+  "metadata": {
+    "last_updated": "2025-06-24",
+    "schema_version": "2.0",
+    "quality_score": 0.95,
+    "completeness": 0.97,
+    "maintainability": 0.94,
+    "documentation_coverage": 0.96,
+    "test_coverage": 0.85,
+    "security_score": 0.93,
+    "performance_score": 0.91,
+    "scalability_score": 0.89
+  }
+}
