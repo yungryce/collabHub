@@ -1,0 +1,288 @@
+{
+  "metadata": {
+    "title": "CollabHub Frontend Application",
+    "type": "container",
+    "parent_repository": "collabHub",
+    "version": "0.0.0",
+    "purpose": "Modern Angular frontend for collaborative task management platform",
+    "description": "Responsive Angular 17 application with TypeScript, TailwindCSS, and reactive programming patterns for task collaboration",
+    "scope": "frontend-application",
+    "complexity": "intermediate",
+    "primary_language": "typescript",
+    "created_date": "2024-01-15",
+    "updated_date": "2024-03-20",
+    "maintainer": {
+      "name": "Jbcco",
+      "email": "jbccodev@outlook.com",
+      "github": "jukwu"
+    }
+  },
+  "repository_context": {
+    "name": "collabHub-frontend",
+    "full_path": "/home/juk/DEV/cloud/functions/collabHub/frontend",
+    "relative_path": "frontend/",
+    "git_tracked": true,
+    "primary_language": "typescript",
+    "language_stats": {
+      "typescript": 75,
+      "html": 15,
+      "css": 8,
+      "javascript": 2
+    },
+    "framework": "angular",
+    "container_type": "frontend-spa"
+  },
+  "tech_stack": {
+    "frontend": {
+      "framework": "Angular 17.3.0",
+      "language": "TypeScript 5.4.2",
+      "reactive_programming": "RxJS 7.8.0",
+      "routing": "Angular Router",
+      "forms": "Angular Reactive Forms",
+      "animations": "Angular Animations 17.3.0"
+    },
+    "ui_ux": {
+      "css_framework": "TailwindCSS 3.4.3",
+      "styling": "PostCSS 8.4.38",
+      "design_system": "Custom components",
+      "alerts": "SweetAlert2 11.10.8",
+      "icons": "Built-in assets"
+    },
+    "third_party": {
+      "calendar": "Angular Calendar 0.31.1",
+      "date_utilities": "date-fns 3.6.0",
+      "security": "ng-recaptcha 13.2.1",
+      "http_client": "Angular HttpClient"
+    },
+    "development": {
+      "cli": "Angular CLI 17.3.5",
+      "build_system": "Webpack (via Angular CLI)",
+      "bundler": "esbuild",
+      "dev_server": "Angular Dev Server"
+    },
+    "testing": {
+      "unit_testing": "Jasmine + Karma",
+      "test_utilities": "Angular Testing Library",
+      "browser_automation": "Karma Chrome Launcher",
+      "coverage": "Istanbul"
+    },
+    "tooling": {
+      "transpiler": "TypeScript Compiler",
+      "linting": "ESLint (configured)",
+      "formatting": "Prettier (configured)",
+      "editor_config": ".editorconfig"
+    }
+  },
+  "skill_manifest": {
+    "core_skills": [
+      {
+        "skill": "angular_development",
+        "level": "intermediate",
+        "components": ["Standalone components", "Reactive forms", "Router configuration", "Dependency injection"],
+        "code_references": ["src/app/", "app.config.ts", "app.routes.ts"]
+      },
+      {
+        "skill": "typescript_programming",
+        "level": "intermediate",
+        "components": ["Type definitions", "Interfaces", "Generics", "Decorators"],
+        "code_references": ["*.ts files", "tsconfig.json"]
+      },
+      {
+        "skill": "reactive_programming",
+        "level": "intermediate",
+        "components": ["RxJS operators", "Observables", "Subject patterns", "HTTP streams"],
+        "code_references": ["*.service.ts", "interceptors", "guards"]
+      },
+      {
+        "skill": "modern_css",
+        "level": "intermediate",
+        "components": ["TailwindCSS utilities", "Responsive design", "CSS Grid/Flexbox", "Custom styling"],
+        "code_references": ["tailwind.config.js", "styles.css", "component styles"]
+      },
+      {
+        "skill": "spa_architecture",
+        "level": "intermediate",
+        "components": ["Route guards", "Lazy loading", "State management", "Component communication"],
+        "code_references": ["app.routes.ts", "guards/", "services/"]
+      }
+    ],
+    "learning_objectives": [
+      "Master modern Angular development patterns",
+      "Implement reactive programming with RxJS",
+      "Build responsive UIs with TailwindCSS",
+      "Create secure SPAs with authentication",
+      "Develop component-based architectures"
+    ],
+    "skill_progression": {
+      "beginner": ["Basic Angular components", "Simple routing", "Basic TypeScript", "CSS fundamentals"],
+      "intermediate": ["Reactive forms", "HTTP interceptors", "State management", "Advanced routing", "UI frameworks"],
+      "advanced": ["Performance optimization", "Micro-frontends", "Custom libraries", "Advanced RxJS patterns"]
+    }
+  },
+  "components": {
+    "authentication_module": {
+      "description": "Complete authentication system with login, registration, and profile management",
+      "location": "src/app/Auth/",
+      "key_files": ["auth.service.ts", "auth.guard.ts", "auth.interceptor.ts", "login/", "register/", "profile/"],
+      "responsibilities": ["User authentication", "Route protection", "Token management", "Profile management"]
+    },
+    "task_management_module": {
+      "description": "Comprehensive task management with CRUD operations and status tracking",
+      "location": "src/app/Task/",
+      "key_files": ["task.service.ts", "task-user-utils.service.ts", "all-tasks/", "new-tasks/", "task/"],
+      "responsibilities": ["Task CRUD operations", "Status management", "User assignments", "Task filtering"]
+    },
+    "shared_components": {
+      "description": "Reusable components and utilities used across the application",
+      "location": "src/app/",
+      "key_files": ["dashboard/", "home/", "footer/", "calendar/"],
+      "responsibilities": ["Navigation", "Layout", "Calendar integration", "Shared utilities"]
+    },
+    "core_services": {
+      "description": "Application-wide services for common functionality",
+      "location": "src/app/",
+      "key_files": ["alert.service.ts", "logging.service.ts", "recaptcha.service.ts", "error.service.ts"],
+      "responsibilities": ["Notification handling", "Error management", "Security integration", "Logging"]
+    }
+  },
+  "architecture_patterns": {
+    "mvc_pattern": {
+      "description": "Model-View-Controller with Angular components as controllers",
+      "implementation": "Components handle view logic, services handle business logic"
+    },
+    "reactive_programming": {
+      "description": "Observable-based data flow and state management",
+      "implementation": "RxJS streams for HTTP calls, form handling, and component communication"
+    },
+    "modular_architecture": {
+      "description": "Feature-based module organization with standalone components",
+      "implementation": "Auth and Task modules with shared services and components"
+    },
+    "guard_pattern": {
+      "description": "Route protection and authorization logic",
+      "implementation": "AuthGuard for protected routes and role-based access"
+    }
+  },
+  "user_interface": {
+    "design_system": {
+      "framework": "TailwindCSS utility-first approach",
+      "responsive_breakpoints": ["sm: 640px", "md: 768px", "lg: 1024px", "xl: 1280px"],
+      "color_scheme": "Custom color palette with dark/light mode support",
+      "typography": "System font stack with TailwindCSS typography"
+    },
+    "component_architecture": {
+      "type": "Standalone components",
+      "communication": "Input/Output properties and services",
+      "state_management": "Service-based with RxJS subjects",
+      "routing": "Angular Router with lazy loading"
+    },
+    "user_experience": {
+      "navigation": "Responsive navigation with route-based menus",
+      "forms": "Reactive forms with validation and error handling",
+      "feedback": "SweetAlert2 for notifications and confirmations",
+      "loading_states": "Loading indicators and skeleton screens"
+    }
+  },
+  "api_integration": {
+    "http_client": "Angular HttpClient with interceptors",
+    "authentication": "JWT token-based with automatic refresh",
+    "error_handling": "Global error interceptor with user feedback",
+    "api_endpoints": {
+      "authentication": "/auth/* endpoints",
+      "user_management": "/api/v1/users/* endpoints",
+      "task_management": "/api/v1/tasks/* endpoints",
+      "security": "/api/v1/recaptcha/* endpoints"
+    }
+  },
+  "security": {
+    "authentication": {
+      "method": "JWT token storage and management",
+      "token_refresh": "Automatic token refresh via interceptors",
+      "route_protection": "AuthGuard implementation"
+    },
+    "authorization": {
+      "role_based": "User role checking in guards and components",
+      "route_protection": "CanActivate guards for protected routes",
+      "conditional_rendering": "Role-based UI element visibility"
+    },
+    "input_validation": {
+      "form_validation": "Angular reactive forms with validators",
+      "recaptcha": "Google reCAPTCHA integration for forms",
+      "sanitization": "Built-in Angular sanitization"
+    }
+  },
+  "performance": {
+    "build_optimization": {
+      "tree_shaking": "Automatic unused code elimination",
+      "bundle_splitting": "Route-based code splitting",
+      "minification": "Production build optimization",
+      "compression": "Gzip compression support"
+    },
+    "runtime_optimization": {
+      "lazy_loading": "Route-based lazy loading",
+      "change_detection": "OnPush strategy where applicable",
+      "virtual_scrolling": "For large data sets",
+      "image_optimization": "Responsive images with lazy loading"
+    }
+  },
+  "quality_metrics": {
+    "code_coverage": "Not specified",
+    "test_files": ["*.spec.ts files", "Karma configuration"],
+    "documentation_completeness": 90,
+    "code_complexity": "Medium",
+    "maintainability_index": 85,
+    "security_score": 88,
+    "performance_rating": "Good",
+    "scalability_rating": "Good"
+  },
+  "relationships": {
+    "dependencies": [
+      {
+        "name": "CollabHub Backend API",
+        "type": "api_backend",
+        "relationship": "consumes_api_from",
+        "description": "REST API communication for all data operations"
+      },
+      {
+        "name": "Google reCAPTCHA",
+        "type": "external_service",
+        "relationship": "integrates_with",
+        "description": "Form protection and bot prevention"
+      }
+    ],
+    "related_containers": [
+      {
+        "name": "backend",
+        "path": "../backend",
+        "relationship": "consumes_api_from",
+        "description": "Flask backend API service"
+      }
+    ]
+  },
+  "deployment": {
+    "build_system": {
+      "primary": "Angular CLI build system",
+      "bundler": "Webpack (via Angular CLI)",
+      "output_directory": "dist/",
+      "static_assets": "src/assets/"
+    },
+    "hosting_options": {
+      "static_hosting": "CDN or static file hosting",
+      "spa_hosting": "Single Page Application hosting",
+      "containerization": "Docker with Nginx",
+      "cloud_platforms": "AWS S3, Azure Static Web Apps, Netlify, Vercel"
+    },
+    "configuration": {
+      "environment_files": "src/environments/",
+      "build_configurations": "angular.json architect.build.configurations",
+      "runtime_configuration": "Environment-based API endpoints"
+    }
+  },
+  "development": {
+    "setup_complexity": "Medium",
+    "prerequisites": ["Node.js 18+", "npm 9+", "Angular CLI 17+"],
+    "development_server": "ng serve with hot reload",
+    "build_commands": ["ng build", "ng build --configuration production"],
+    "development_tools": ["Angular CLI", "TypeScript Language Server", "Angular Language Service"]
+  }
+}
